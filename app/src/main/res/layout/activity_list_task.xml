@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.list.ListTaskActivity"
+    android:background="@color/silver_sand"
     >
 
     <com.google.android.material.appbar.AppBarLayout
@@ -54,11 +55,13 @@
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/list_task_act_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_add_24"
         app:tint="@color/white"
+        app:rippleColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

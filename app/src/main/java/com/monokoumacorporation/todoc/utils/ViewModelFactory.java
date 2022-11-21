@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.monokoumacorporation.todoc.data.model.Task;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
+import com.monokoumacorporation.todoc.ui.create.CreateTaskViewModel;
 import com.monokoumacorporation.todoc.ui.list.ListTaskViewModel;
 
 
@@ -41,6 +42,10 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new ListTaskViewModel(
                 taskRepository
             );
+        } else if (modelClass.isAssignableFrom(CreateTaskViewModel.class)) {
+               return (T) new CreateTaskViewModel(
+                   taskRepository
+               );
         }
         //else if (modelClass.isAssignableFrom(MeetingDetailsViewModel.class)) {
         //   return (T) new MeetingDetailsViewModel(

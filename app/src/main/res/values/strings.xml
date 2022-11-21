@@ -7,5 +7,11 @@
     <string name="sort_oldest_first">Les plus anciens d’abord</string>
     <string name="sort_recent_first">Les plus récents d’abord</string>
     <string name="no_task">Tu n’as aucune tâche à traiter</string>
+    <string name="projet_circus">Projet Circus</string>
+    <string name="projet_lucidia">Projet Lucidia</string>
+    <string name="projet_tartampion">Projet Tartampion</string>
+    <string name="a_quel_projet_voulez_vous_ajouter_cette_tache">A quel projet voulez vous ajouter cette tache ?</string>
+    <string name="entrez_le_nom_de_la_tache">Entrez le nom de la tache</string>
+    <string name="ajouter">Ajouter</string>
 
 </resources>
