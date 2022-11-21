@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'jacoco'
 }
 
 android {
@@ -17,13 +18,19 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled = true
     }
 }
 
@@ -35,4 +42,94 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    testImplementation 'org.mockito:mockito-core:3.11.1'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.0'
+    androidTestUtil 'androidx.test:orchestrator:1.4.2'
+
+
+    implementation "androidx.room:room-runtime:2.3.0"
+
+    annotationProcessor "androidx.room:room-compiler:2.3.0"
+
+
+    //VIEW MODEL & LIVE DATA
+
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+}
+
+
+// open JaCoCo report after generation
+def openReport(htmlOutDir) {
+
+    final reportPath = "$htmlOutDir"
+
+    def os = org.gradle.internal.os.OperatingSystem.current()
+    if (os.isWindows()) {
+        exec { commandLine 'cmd', '/c', "start $reportPath" }
+    } else if (os.isMacOsX()) {
+        exec { commandLine 'open', "$reportPath/index.html" }
+    }
+
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+tasks.withType(Test) {
+    jacoco {
+        includeNoLocationClasses = true
+        excludes = ['jdk.internal.*'] // Allows it to run on Java 11
+    }
+}
+
+
+
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+
+    doLast {
+        openReport layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
+    }
+
+    reports {
+        xml.enabled(true)
+        html.enabled(true)
+        csv.enabled(true)
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*_Impl*.*', // Room implementations
+            '**/*Binding.*',
+            '**/*Fragment.*',
+            '**/*Activity.*',
+            '**/*Adapter.*',
+            '**/*DiffCallback.*',
+            '**/*ViewHolder.*',
+            '**/*ViewModelFactory.*',
+            '**/*Entity.*',
+            '**/*AppDatabase*.*',
+            '**/BuildConfigResolver.*',
+            '**/MainThreadExecutor.*',
+            '**/*Test*.*',
+            'android/**/*.*'
+    ]
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([debugTree]))
+    executionData.setFrom(fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code_coverage/debugAndroidTest/connected/**/*.ec'
+    ]))
 }
