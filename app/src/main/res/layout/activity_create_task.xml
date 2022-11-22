@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.create.CreateTaskActivity"
-    android:background="@color/silver_sand"
-    >
+    android:background="@color/silver_sand">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/create_task_act_app_bar"
@@ -99,38 +98,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/create_task_act_task_tartampion_checkbox"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/create_task_act_tartampion_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/projet_tartampion"
-        android:textSize="16sp"
         android:layout_margin="16dp"
+        android:text="@string/projet_tartampion"
+        app:backgroundTint="@color/charcoal"
         app:layout_constraintTop_toBottomOf="@id/create_task_act_error_checkbox_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/create_task_act_task_lucidia_checkbox"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/create_task_act_lucidia_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/projet_lucidia"
         android:layout_margin="16dp"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/create_task_act_task_tartampion_checkbox"
+        app:backgroundTint="@color/charcoal"
+        app:layout_constraintTop_toBottomOf="@id/create_task_act_tartampion_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/create_task_act_task_circus_checkbox"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/create_task_act_circus_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/projet_circus"
         android:layout_margin="16dp"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/create_task_act_task_lucidia_checkbox"
+        android:text="@string/projet_circus"
+        app:backgroundTint="@color/charcoal"
+        app:layout_constraintTop_toBottomOf="@id/create_task_act_lucidia_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
@@ -139,12 +138,14 @@
         android:id="@+id/create_task_act_add_task_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        app:rippleColor="@color/white"
-        android:text="@string/ajouter"
         android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/create_task_act_task_circus_checkbox"
+        android:backgroundTint="@color/black"
+        android:text="@string/ajouter"
+        app:layout_constraintTop_toBottomOf="@id/create_task_act_circus_button"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="@color/white"
+       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

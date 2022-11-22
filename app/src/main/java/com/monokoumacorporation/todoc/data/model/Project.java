@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity
+@Entity(tableName = "project_table")
 public class Project {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private final long id;
 
     @NonNull

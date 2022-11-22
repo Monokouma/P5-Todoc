@@ -1,12 +1,15 @@
 package com.monokoumacorporation.todoc.ui.create;
 
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.room.Insert;
 
+import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 import com.monokoumacorporation.todoc.utils.SingleLiveEvent;
 
@@ -20,59 +23,95 @@ public class CreateTaskViewModel extends ViewModel {
 
     private String taskName;
 
-    private String projectName;
+    private Integer projectId;
 
-    private final static String TARTAMPION_CHECKBOX = "TARTAMPION";
-    private final static String LUCIDIA_CHECKBOX = "LUCIDIA";
-    private final static String CIRCUS_CHECKBOX = "CIRCUS";
+    private final static int TARTAMPION_ID = 1 ;
+    private final static int LUCIDIA_ID = 2;
+    private final static int CIRCUS_ID = 3;
 
-    public CreateTaskViewModel(TaskRepository taskRepository) {
+    private final Resources resources;
+
+    public CreateTaskViewModel(TaskRepository taskRepository, Resources resources) {
         this.taskRepository = taskRepository;
+        this.resources = resources;
 
         createTaskViewStateMutableLiveData.setValue(
             new CreateTaskViewState(
                 null,
                 View.GONE,
-                false,
-                false,
-                false
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white)
             )
         );
     }
 
     public void onTaskTietTextChange(String taskName) {
         this.taskName = taskName;
+        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+        createTaskViewStateMutableLiveData.setValue(
+            new CreateTaskViewState(
+                null,
+                previous.getCheckboxErrorVisibility(),
+                previous.getTartampionButtonBackgroundColor(),
+                previous.getLucidiaButtonBackgroundColor(),
+                previous.getCircusButtonBackgroundColor(),
+                previous.getTartampionTextButtonColor(),
+                previous.getLucidiaTextButtonColor(),
+                previous.getCircusTextButtonColor()
+            )
+        );
+
     }
 
     public void onAddButtonClicked() {
-        CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+
         if (taskName == null || taskName.isEmpty()) {
             createTaskViewStateMutableLiveData.setValue(
                 new CreateTaskViewState(
-                    "Veuillez écrire une tache",
+                    "error",
                     previous.getCheckboxErrorVisibility(),
-                    previous.getTartampionCheckboxChecked(),
-                    previous.getLucidiaCheckboxChecked(),
-                    previous.getCircusCheckboxChecked()
+                    previous.getTartampionButtonBackgroundColor(),
+                    previous.getLucidiaButtonBackgroundColor(),
+                    previous.getCircusButtonBackgroundColor(),
+                    previous.getTartampionTextButtonColor(),
+                    previous.getLucidiaTextButtonColor(),
+                    previous.getCircusTextButtonColor()
                 )
             );
-        } else {
+        } else if (projectId == null) {
             createTaskViewStateMutableLiveData.setValue(
                 new CreateTaskViewState(
-                    null,
-                    View.GONE,
-                    previous.getTartampionCheckboxChecked(),
-                    previous.getLucidiaCheckboxChecked(),
-                    previous.getCircusCheckboxChecked()
+                    previous.getTaskInputErrorMessage(),
+                    View.VISIBLE,
+                    previous.getTartampionButtonBackgroundColor(),
+                    previous.getLucidiaButtonBackgroundColor(),
+                    previous.getCircusButtonBackgroundColor(),
+                    previous.getTartampionTextButtonColor(),
+                    previous.getLucidiaTextButtonColor(),
+                    previous.getCircusTextButtonColor()
                 )
             );
-            taskRepository.createTask(taskName, projectName);
-            onFinishActivityEvent.call();
         }
-        
 
-
-        //Send to repo
+        createTaskViewStateMutableLiveData.setValue(
+            new CreateTaskViewState(
+                null,
+                View.GONE,
+                previous.getTartampionButtonBackgroundColor(),
+                previous.getLucidiaButtonBackgroundColor(),
+                previous.getCircusButtonBackgroundColor(),
+                previous.getTartampionTextButtonColor(),
+                previous.getLucidiaTextButtonColor(),
+                previous.getCircusTextButtonColor()
+            )
+        );
+        taskRepository.createTask(projectId, taskName);
+        onFinishActivityEvent.call();
     }
 
     public LiveData<CreateTaskViewState> getCreateTaskViewStateMutableLiveData() {
@@ -83,8 +122,60 @@ public class CreateTaskViewModel extends ViewModel {
         return onFinishActivityEvent;
     }
 
-    public void onCheckboxChecked(boolean isChecked, String from) {
-        this.projectName = from;
+
+    public void onTartampionButtonClicked(int tartampionId) {
+        projectId = tartampionId;
+        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+        createTaskViewStateMutableLiveData.setValue(
+            new CreateTaskViewState(
+                previous.getTaskInputErrorMessage(),
+                View.GONE,
+                resources.getColor(R.color.dogwood_rose),
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white)
+            )
+        );
+
     }
 
+    public void onLucidiaButtonClicked(int lucidiaId) {
+        projectId = lucidiaId;
+        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+        createTaskViewStateMutableLiveData.setValue(
+            new CreateTaskViewState(
+                previous.getTaskInputErrorMessage(),
+                View.GONE,
+
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.green_munsell),
+                resources.getColor(R.color.charcoal),
+
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white)
+            )
+        );
+    }
+
+    public void onCircusButtonClicked(int circusId) {
+        projectId = circusId;
+        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+        createTaskViewStateMutableLiveData.setValue(
+            new CreateTaskViewState(
+                previous.getTaskInputErrorMessage(),
+                View.GONE,
+
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.charcoal),
+                resources.getColor(R.color.marigold),
+
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white),
+                resources.getColor(R.color.white)
+            )
+        );
+    }
 }

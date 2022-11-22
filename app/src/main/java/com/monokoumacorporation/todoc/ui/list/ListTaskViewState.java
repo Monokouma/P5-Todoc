@@ -2,22 +2,20 @@ package com.monokoumacorporation.todoc.ui.list;
 
 import androidx.annotation.NonNull;
 
-import com.monokoumacorporation.todoc.data.model.Project;
-
 import java.util.List;
 import java.util.Objects;
 
 public class ListTaskViewState {
 
     @NonNull
-    private final List<ListActivityViewStateItems> listActivityViewStateItemsList;
+    private final List<TaskViewStateItems> listActivityViewStateItemsList;
 
-    public ListTaskViewState(@NonNull List<ListActivityViewStateItems> listActivityViewStateItemsList) {
+    public ListTaskViewState(@NonNull List<TaskViewStateItems> listActivityViewStateItemsList) {
         this.listActivityViewStateItemsList = listActivityViewStateItemsList;
     }
 
     @NonNull
-    public List<ListActivityViewStateItems> getListActivityViewStateItemsList() {
+    public List<TaskViewStateItems> getListActivityViewStateItemsList() {
         return listActivityViewStateItemsList;
     }
 

@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class ListActivityViewStateItems {
+public class TaskViewStateItems {
 
     @NonNull
     private final String taskName;
@@ -16,7 +16,7 @@ public class ListActivityViewStateItems {
     @ColorRes
     private final int projectColor;
 
-    public ListActivityViewStateItems(@NonNull String taskName, @NonNull String projectName, int projectColor) {
+    public TaskViewStateItems(@NonNull String taskName, @NonNull String projectName, int projectColor) {
         this.taskName = taskName;
         this.projectName = projectName;
         this.projectColor = projectColor;
@@ -40,7 +40,7 @@ public class ListActivityViewStateItems {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListActivityViewStateItems that = (ListActivityViewStateItems) o;
+        TaskViewStateItems that = (TaskViewStateItems) o;
         return projectColor == that.projectColor && taskName.equals(that.taskName) && projectName.equals(that.projectName);
     }
 

@@ -24,9 +24,9 @@ import com.monokoumacorporation.todoc.utils.ViewModelFactory;
 public class CreateTaskActivity extends AppCompatActivity {
 
 
-    private final static String TARTAMPION_CHECKBOX = "TARTAMPION";
-    private final static String LUCIDIA_CHECKBOX = "LUCIDIA";
-    private final static String CIRCUS_CHECKBOX = "CIRCUS";
+    private final static int TARTAMPION_ID = 1 ;
+    private final static int LUCIDIA_ID = 2;
+    private final static int CIRCUS_ID = 3;
 
     public static Intent navigate(Context c) {
         Intent intent = new Intent(c, CreateTaskActivity.class);
@@ -46,35 +46,19 @@ public class CreateTaskActivity extends AppCompatActivity {
         TextInputLayout taskTIL = findViewById(R.id.create_task_act_task_til);
         TextInputEditText taskTIET = findViewById(R.id.create_task_act_task_tiet);
 
+        MaterialButton tartampionButton = findViewById(R.id.create_task_act_tartampion_button);
+        MaterialButton lucidiaButton = findViewById(R.id.create_task_act_lucidia_button);
+        MaterialButton circusButton = findViewById(R.id.create_task_act_circus_button);
+
         TextView noCheckBoxCheckedErrorTV = findViewById(R.id.create_task_act_error_checkbox_tv);
-        MaterialCheckBox tartampionChecBox = findViewById(R.id.create_task_act_task_tartampion_checkbox);
-        MaterialCheckBox lucidiaCheckBox = findViewById(R.id.create_task_act_task_lucidia_checkbox);
-        MaterialCheckBox circusCheckBox = findViewById(R.id.create_task_act_task_circus_checkbox);
 
         MaterialButton addTaskButton = findViewById(R.id.create_task_act_add_task_button);
 
-        tartampionChecBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                createTaskViewModel.onCheckboxChecked(b, TARTAMPION_CHECKBOX);
-            }
-        });
-
-        lucidiaCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                createTaskViewModel.onCheckboxChecked(b, LUCIDIA_CHECKBOX);
-            }
-        });
-
-        circusCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                createTaskViewModel.onCheckboxChecked(b, CIRCUS_CHECKBOX);
-            }
-        });
-
         addTaskButton.setOnClickListener(view -> createTaskViewModel.onAddButtonClicked());
+
+        tartampionButton.setOnClickListener(view -> createTaskViewModel.onTartampionButtonClicked(TARTAMPION_ID));
+        lucidiaButton.setOnClickListener(view -> createTaskViewModel.onLucidiaButtonClicked(LUCIDIA_ID));
+        circusButton.setOnClickListener(view -> createTaskViewModel.onCircusButtonClicked(CIRCUS_ID));
 
         taskTIET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -96,9 +80,13 @@ public class CreateTaskActivity extends AppCompatActivity {
         createTaskViewModel.getCreateTaskViewStateMutableLiveData().observe(this, createTaskViewState -> {
             taskTIET.setError(createTaskViewState.getTaskInputErrorMessage());
             noCheckBoxCheckedErrorTV.setVisibility(createTaskViewState.getCheckboxErrorVisibility());
-            tartampionChecBox.setChecked(createTaskViewState.getTartampionCheckboxChecked());
-            lucidiaCheckBox.setChecked(createTaskViewState.getLucidiaCheckboxChecked());
-            circusCheckBox.setChecked(createTaskViewState.getCircusCheckboxChecked());
+            tartampionButton.setBackgroundColor(createTaskViewState.getTartampionButtonBackgroundColor());
+            lucidiaButton.setBackgroundColor(createTaskViewState.getLucidiaButtonBackgroundColor());
+            circusButton.setBackgroundColor(createTaskViewState.getCircusButtonBackgroundColor());
+
+            tartampionButton.setTextColor(createTaskViewState.getTartampionTextButtonColor());
+            lucidiaButton.setTextColor(createTaskViewState.getLucidiaTextButtonColor());
+            circusButton.setTextColor(createTaskViewState.getCircusTextButtonColor());
         });
 
         createTaskViewModel.getOnFinishActivityEvent().observe(this, aVoid -> finish());

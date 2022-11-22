@@ -7,15 +7,13 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(foreignKeys = @ForeignKey(entity = Project.class, parentColumns = "id", childColumns = "projectId"))
-
+@Entity(tableName = "task_table")
 public class Task {
 
     @PrimaryKey(autoGenerate = true)
+    private int id;
 
-    private long id;
-
-    private String projectId;
+    private int projectId;
 
     @NonNull
     private String name;
@@ -23,8 +21,8 @@ public class Task {
 
     private long creationTimestamp;
 
-    public Task(long id,
-                String projectId,
+    public Task(int id,
+                int projectId,
                 @NonNull String name,
                 long creationTimestamp) {
         this.id = id;
@@ -33,11 +31,11 @@ public class Task {
         this.creationTimestamp = creationTimestamp;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public String getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
@@ -50,11 +48,11 @@ public class Task {
         return creationTimestamp;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public void setProjectId(String projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 

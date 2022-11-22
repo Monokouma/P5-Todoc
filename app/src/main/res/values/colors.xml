@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="silver_sand">#C4CBCA</color>
     <color name="crimson_ua">#A71D31</color>
+    <color name="charcoal">#353A47</color>
+
+    <color name="dogwood_rose">#DC136C</color>
+    <color name="green_munsell">#06A77D</color>
+    <color name="marigold">#F1A208</color>
 </resources>
