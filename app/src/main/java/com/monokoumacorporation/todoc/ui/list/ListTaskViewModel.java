@@ -1,16 +1,14 @@
 package com.monokoumacorporation.todoc.ui.list;
 
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.monokoumacorporation.todoc.R;
-import com.monokoumacorporation.todoc.data.model.Task;
+import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 
 import java.util.ArrayList;
@@ -25,18 +23,34 @@ public class ListTaskViewModel extends ViewModel {
     public ListTaskViewModel(TaskRepository taskRepository, Resources resources) {
         this.taskRepository = taskRepository;
 
-        LiveData<List<Task>> taskListLiveData = taskRepository.getTaskListLiveData();
+        LiveData<List<TaskEntity>> taskListLiveData = taskRepository.getTaskListLiveData();
 
-        listTaskViewStateMediatorLiveData.addSource(taskListLiveData, new Observer<List<Task>>() {
+        listTaskViewStateMediatorLiveData.addSource(taskListLiveData, new Observer<List<TaskEntity>>() {
             @Override
-            public void onChanged(List<Task> tasks) {
+            public void onChanged(List<TaskEntity> tasks) {
+                String projectName;
+                int projectColor;
+
                 List<TaskViewStateItems> taskViewStateItemsList = new ArrayList<>();
-                for (Task task : tasks) {
+                for (TaskEntity task : tasks) {
+                    if (task.getProjectId() == 1) {
+                        projectName = resources.getString(R.string.projet_tartampion);
+                        projectColor = resources.getColor(R.color.dogwood_rose);
+                    } else if (task.getProjectId() == 2) {
+                        projectName = resources.getString(R.string.projet_lucidia);
+                        projectColor = resources.getColor(R.color.green_munsell);
+                    } else if (task.getProjectId() == 3) {
+                        projectName = resources.getString(R.string.projet_circus);
+                        projectColor = resources.getColor(R.color.marigold);
+                    } else {
+                        projectName = resources.getString(R.string.app_name);
+                        projectColor = resources.getColor(R.color.charcoal);
+                    }
                     taskViewStateItemsList.add(
                         new TaskViewStateItems(
                             task.getName(),
-                            String.valueOf(task.getProjectId()),
-                            resources.getColor(R.color.dogwood_rose),
+                            projectName,
+                            projectColor,
                             task.getId()
                         )
                     );

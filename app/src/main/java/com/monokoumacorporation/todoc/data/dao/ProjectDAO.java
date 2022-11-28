@@ -5,7 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.monokoumacorporation.todoc.data.model.Project;
+import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import java.util.List;
 public interface ProjectDAO {
 
     @Insert
-    long insert(Project project);
+    long insert(ProjectEntity project);
 
     @Query("SELECT * FROM project_table")
-    LiveData<List<Project>> getAll();
+    LiveData<List<ProjectEntity>> getAll();
 
 }

@@ -1,14 +1,13 @@
-package com.monokoumacorporation.todoc.data.model;
+package com.monokoumacorporation.todoc.data.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
 @Entity(tableName = "task_table")
-public class Task {
+public class TaskEntity {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -21,10 +20,10 @@ public class Task {
 
     private long creationTimestamp;
 
-    public Task(int id,
-                int projectId,
-                @NonNull String name,
-                long creationTimestamp) {
+    public TaskEntity(int id,
+                      int projectId,
+                      @NonNull String name,
+                      long creationTimestamp) {
         this.id = id;
         this.projectId = projectId;
         this.name = name;
@@ -68,7 +67,7 @@ public class Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
+        TaskEntity task = (TaskEntity) o;
         return id == task.id && Objects.equals(projectId, task.projectId) && creationTimestamp == task.creationTimestamp && name.equals(task.name);
     }
 

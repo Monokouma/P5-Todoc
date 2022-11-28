@@ -13,5 +13,5 @@
     <string name="a_quel_projet_voulez_vous_ajouter_cette_tache">A quel projet voulez vous ajouter cette tache ?</string>
     <string name="entrez_le_nom_de_la_tache">Entrez le nom de la tache</string>
     <string name="ajouter">Ajouter</string>
-
+    <string name="task_name_error">Vous n\'avez rien écrit !</string>
 </resources>

@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/task_list_item_divider"
         android:src="@drawable/bkg_oval"
-        tools:tint="@color/purple_200"
+        tools:tint="@color/marigold"
         />
 
     <TextView
@@ -24,11 +24,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="Nourrir les chats"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:layout_margin="8dp"
         app:chainUseRtl="true"
         app:layout_constraintVertical_chainStyle="packed"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@id/task_list_item_project_name_tv"
         app:layout_constraintEnd_toStartOf="@id/task_list_item_delete_image"
@@ -41,8 +41,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="Projet Tartampion"
-        android:textSize="12sp"
-        android:textAlignment="textStart"
+        android:textSize="16sp"
+        android:textAlignment="center"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/task_list_item_task_name_tv"
         app:layout_constraintStart_toStartOf="@id/task_list_item_task_name_tv"
@@ -55,6 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        tools:tint="@color/marigold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/task_list_item_divider"
@@ -68,12 +69,13 @@
         android:layout_height="wrap_content"
         app:dividerInsetStart="32dp"
         app:dividerInsetEnd="32dp"
-        app:dividerColor="@color/black"
+        app:dividerColor="@color/marigold"
         app:dividerThickness="2dp"
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/task_list_item_project_name_tv"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

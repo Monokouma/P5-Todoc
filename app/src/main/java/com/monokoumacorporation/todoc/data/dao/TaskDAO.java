@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.monokoumacorporation.todoc.data.model.Task;
+import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ import java.util.List;
 public interface TaskDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertTask(Task task);
+    void insertTask(TaskEntity task);
 
     @Query("SELECT * FROM task_table")
-    LiveData<List<Task>> getTaskListLiveData();
+    LiveData<List<TaskEntity>> getTaskListLiveData();
 
     @Query("DELETE FROM task_table WHERE id=:taskId")
-    int delete(long taskId);
+    void delete(long taskId);
 }

@@ -7,15 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.monokoumacorporation.todoc.R;
-import com.monokoumacorporation.todoc.data.model.Task;
 import com.monokoumacorporation.todoc.ui.create.CreateTaskActivity;
 import com.monokoumacorporation.todoc.utils.ViewModelFactory;
-
-import java.util.List;
 
 public class ListTaskActivity extends AppCompatActivity implements OnDeleteListener {
 

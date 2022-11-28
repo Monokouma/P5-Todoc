@@ -1,4 +1,4 @@
-package com.monokoumacorporation.todoc.data.model;
+package com.monokoumacorporation.todoc.data.entity;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 import java.util.Objects;
 
 @Entity(tableName = "project_table")
-public class Project {
+public class ProjectEntity {
 
     @PrimaryKey(autoGenerate = true)
     private final long id;
@@ -19,9 +19,9 @@ public class Project {
     @ColorInt
     private final int color;
 
-    public Project(long id,
-                   @NonNull String name,
-                   int color) {
+    public ProjectEntity(long id,
+                         @NonNull String name,
+                         int color) {
         this.id = id;
         this.name = name;
         this.color = color;
@@ -44,7 +44,7 @@ public class Project {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Project project = (Project) o;
+        ProjectEntity project = (ProjectEntity) o;
         return id == project.id && color == project.color && name.equals(project.name);
     }
 

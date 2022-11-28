@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.divider.MaterialDivider;
 import com.monokoumacorporation.todoc.R;
 
 public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAdapter.ViewHolder> {
@@ -45,6 +46,7 @@ public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAda
         private final TextView taskNameTv;
         private final TextView projectName;
         private final ImageView deleteImage;
+        private final MaterialDivider materialDivider;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -52,14 +54,15 @@ public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAda
             taskNameTv = itemView.findViewById(R.id.task_list_item_task_name_tv);
             projectName = itemView.findViewById(R.id.task_list_item_project_name_tv);
             deleteImage = itemView.findViewById(R.id.task_list_item_delete_image);
-
+            materialDivider = itemView.findViewById(R.id.task_list_item_divider);
         }
 
         public void bind(@NonNull final TaskViewStateItems listActivityViewStateItems, @NonNull OnDeleteListener listener) {
             projectColorImage.setColorFilter(listActivityViewStateItems.getProjectColor());
             taskNameTv.setText(listActivityViewStateItems.getTaskName());
             projectName.setText(listActivityViewStateItems.getProjectName());
-
+            materialDivider.setDividerColor(listActivityViewStateItems.getProjectColor());
+            deleteImage.setColorFilter(listActivityViewStateItems.getProjectColor());
             deleteImage.setOnClickListener(view -> {
                 listener.deleteItem(listActivityViewStateItems.getId());
             });

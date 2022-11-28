@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.monokoumacorporation.todoc.data.database.TodocDatabase;
-import com.monokoumacorporation.todoc.data.model.Task;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 import com.monokoumacorporation.todoc.ui.create.CreateTaskViewModel;
 import com.monokoumacorporation.todoc.ui.list.ListTaskViewModel;

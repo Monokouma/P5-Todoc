@@ -1,6 +1,5 @@
 package com.monokoumacorporation.todoc.data.database;
 
-import android.app.Application;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -13,14 +12,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.dao.ProjectDAO;
 import com.monokoumacorporation.todoc.data.dao.TaskDAO;
-import com.monokoumacorporation.todoc.data.model.Project;
-import com.monokoumacorporation.todoc.data.model.Task;
+import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
+import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-@Database(entities = {Task.class, Project.class}, version = 1, exportSchema = false)
+@Database(entities = {TaskEntity.class, ProjectEntity.class}, version = 1, exportSchema = false)
 public abstract class TodocDatabase extends RoomDatabase {
 
     public abstract TaskDAO getTaskDAO();
@@ -61,7 +58,7 @@ public abstract class TodocDatabase extends RoomDatabase {
 
 
                     projectDAO.insert(
-                        new Project(
+                        new ProjectEntity(
                             1,
                             context.getResources().getString(R.string.projet_tartampion),
                             ResourcesCompat.getColor(context.getResources(), R.color.dogwood_rose, null)
@@ -70,7 +67,7 @@ public abstract class TodocDatabase extends RoomDatabase {
 
 
                     projectDAO.insert(
-                        new Project(
+                        new ProjectEntity(
                             2,
                             context.getResources().getString(R.string.projet_lucidia),
                             ResourcesCompat.getColor(context.getResources(), R.color.green_munsell, null)
@@ -78,7 +75,7 @@ public abstract class TodocDatabase extends RoomDatabase {
                     );
 
                     projectDAO.insert(
-                        new Project(
+                        new ProjectEntity(
                             3,
                             context.getResources().getString(R.string.projet_circus),
                             ResourcesCompat.getColor(context.getResources(), R.color.marigold, null)

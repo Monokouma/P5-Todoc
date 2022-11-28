@@ -22,12 +22,7 @@ public class CreateTaskViewModel extends ViewModel {
     private final SingleLiveEvent<Void> onFinishActivityEvent = new SingleLiveEvent<>();
 
     private String taskName;
-
     private Integer projectId;
-
-    private final static int TARTAMPION_ID = 1 ;
-    private final static int LUCIDIA_ID = 2;
-    private final static int CIRCUS_ID = 3;
 
     private final Resources resources;
 
@@ -73,7 +68,7 @@ public class CreateTaskViewModel extends ViewModel {
         if (taskName == null || taskName.isEmpty()) {
             createTaskViewStateMutableLiveData.setValue(
                 new CreateTaskViewState(
-                    "error",
+                    resources.getString(R.string.task_name_error),
                     previous.getCheckboxErrorVisibility(),
                     previous.getTartampionButtonBackgroundColor(),
                     previous.getLucidiaButtonBackgroundColor(),
@@ -96,22 +91,23 @@ public class CreateTaskViewModel extends ViewModel {
                     previous.getCircusTextButtonColor()
                 )
             );
+        } else {
+            createTaskViewStateMutableLiveData.setValue(
+                new CreateTaskViewState(
+                    null,
+                    View.GONE,
+                    previous.getTartampionButtonBackgroundColor(),
+                    previous.getLucidiaButtonBackgroundColor(),
+                    previous.getCircusButtonBackgroundColor(),
+                    previous.getTartampionTextButtonColor(),
+                    previous.getLucidiaTextButtonColor(),
+                    previous.getCircusTextButtonColor()
+                )
+            );
+            taskRepository.createTask(projectId, taskName);
+            onFinishActivityEvent.call();
         }
 
-        createTaskViewStateMutableLiveData.setValue(
-            new CreateTaskViewState(
-                null,
-                View.GONE,
-                previous.getTartampionButtonBackgroundColor(),
-                previous.getLucidiaButtonBackgroundColor(),
-                previous.getCircusButtonBackgroundColor(),
-                previous.getTartampionTextButtonColor(),
-                previous.getLucidiaTextButtonColor(),
-                previous.getCircusTextButtonColor()
-            )
-        );
-        taskRepository.createTask(projectId, taskName);
-        onFinishActivityEvent.call();
     }
 
     public LiveData<CreateTaskViewState> getCreateTaskViewStateMutableLiveData() {

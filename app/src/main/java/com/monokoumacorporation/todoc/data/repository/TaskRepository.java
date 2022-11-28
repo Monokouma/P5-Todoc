@@ -3,13 +3,11 @@ package com.monokoumacorporation.todoc.data.repository;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 
 import com.monokoumacorporation.todoc.data.dao.ProjectDAO;
 import com.monokoumacorporation.todoc.data.dao.TaskDAO;
-import com.monokoumacorporation.todoc.data.database.TodocDatabase;
-import com.monokoumacorporation.todoc.data.model.Task;
+import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -19,7 +17,7 @@ public class TaskRepository {
 
     private int id;
     private TaskDAO taskDAO;
-    private LiveData<List<Task>> taskListLiveData;
+    private LiveData<List<TaskEntity>> taskListLiveData;
 
 
     public TaskRepository(Application application, ProjectDAO projectDAO, TaskDAO taskDAO) {
@@ -31,7 +29,7 @@ public class TaskRepository {
     public void createTask(int projectId, String taskName) {
         LocalDateTime now = LocalDateTime.now();
 
-        Task task = new Task(
+        TaskEntity task = new TaskEntity(
             id++,
             projectId,
             taskName,
@@ -44,7 +42,7 @@ public class TaskRepository {
 
     }
 
-    public LiveData<List<Task>> getTaskListLiveData() {
+    public LiveData<List<TaskEntity>> getTaskListLiveData() {
         return taskListLiveData;
     }
 
