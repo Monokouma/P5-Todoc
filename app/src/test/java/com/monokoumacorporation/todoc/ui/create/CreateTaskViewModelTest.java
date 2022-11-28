@@ -18,7 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class CreateTaskTest {
+public class CreateTaskViewModelTest {
     private static final int DEFAULT_BACKGROUND_BUTTON_COLOR = R.color.charcoal;
     private static final int DEFAULT_TEXT_BUTTON_COLOR = R.color.white;
 

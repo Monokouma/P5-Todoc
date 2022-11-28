@@ -18,11 +18,14 @@ public class TaskViewStateItems {
 
     private final long id;
 
-    public TaskViewStateItems(@NonNull String taskName, @NonNull String projectName, int projectColor, long id) {
+    private final long creationTimeStamp;
+
+    public TaskViewStateItems(@NonNull String taskName, @NonNull String projectName, int projectColor, long id, long creationTimeStamp) {
         this.taskName = taskName;
         this.projectName = projectName;
         this.projectColor = projectColor;
         this.id = id;
+        this.creationTimeStamp = creationTimeStamp;
     }
 
     @NonNull
@@ -43,17 +46,21 @@ public class TaskViewStateItems {
         return id;
     }
 
+    public long getCreationTimeStamp() {
+        return creationTimeStamp;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TaskViewStateItems that = (TaskViewStateItems) o;
-        return projectColor == that.projectColor && id == that.id && taskName.equals(that.taskName) && projectName.equals(that.projectName);
+        return projectColor == that.projectColor && id == that.id && creationTimeStamp == that.creationTimeStamp && taskName.equals(that.taskName) && projectName.equals(that.projectName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskName, projectName, projectColor, id);
+        return Objects.hash(taskName, projectName, projectColor, id, creationTimeStamp);
     }
 
     @NonNull
@@ -64,6 +71,7 @@ public class TaskViewStateItems {
             ", projectName='" + projectName + '\'' +
             ", projectColor=" + projectColor +
             ", id=" + id +
+            ", creationTimeStamp=" + creationTimeStamp +
             '}';
     }
 }
