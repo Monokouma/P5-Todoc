@@ -47,4 +47,10 @@ public class TaskRepository {
     public LiveData<List<Task>> getTaskListLiveData() {
         return taskListLiveData;
     }
+
+    public void deleteTask(long taskId) {
+        AsyncTask.execute(() -> {
+            taskDAO.delete(taskId);
+        });
+    }
 }

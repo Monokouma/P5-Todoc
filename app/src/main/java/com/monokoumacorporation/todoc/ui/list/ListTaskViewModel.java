@@ -20,8 +20,10 @@ public class ListTaskViewModel extends ViewModel {
 
     private final MediatorLiveData<ListTaskViewState> listTaskViewStateMediatorLiveData = new MediatorLiveData<>();
 
+    private final TaskRepository taskRepository;
 
     public ListTaskViewModel(TaskRepository taskRepository, Resources resources) {
+        this.taskRepository = taskRepository;
 
         LiveData<List<Task>> taskListLiveData = taskRepository.getTaskListLiveData();
 
@@ -34,7 +36,8 @@ public class ListTaskViewModel extends ViewModel {
                         new TaskViewStateItems(
                             task.getName(),
                             String.valueOf(task.getProjectId()),
-                            resources.getColor(R.color.dogwood_rose)
+                            resources.getColor(R.color.dogwood_rose),
+                            task.getId()
                         )
                     );
                 }
@@ -52,5 +55,9 @@ public class ListTaskViewModel extends ViewModel {
 
     public LiveData<ListTaskViewState> getTaskListMutableLiveData() {
         return listTaskViewStateMediatorLiveData;
+    }
+
+    public void onDeleteButtonClick(long taskId) {
+        taskRepository.deleteTask(taskId);
     }
 }

@@ -39,7 +39,6 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     }
 
 
-
     private ViewModelFactory(@NonNull TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
 

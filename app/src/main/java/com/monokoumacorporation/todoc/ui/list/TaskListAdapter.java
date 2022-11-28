@@ -1,5 +1,6 @@
 package com.monokoumacorporation.todoc.ui.list;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,12 @@ import com.monokoumacorporation.todoc.R;
 
 public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAdapter.ViewHolder> {
 
-    public TaskListAdapter() {
+    @NonNull
+    private final OnDeleteListener listener;
+
+    public TaskListAdapter(@NonNull OnDeleteListener listener) {
         super(new TaskListAdapterDiffCallBack());
+        this.listener = listener;
     }
 
     @NonNull
@@ -31,7 +36,7 @@ public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAda
 
     @Override
     public void onBindViewHolder(@NonNull TaskListAdapter.ViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        holder.bind(getItem(position), listener);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,13 +52,17 @@ public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAda
             taskNameTv = itemView.findViewById(R.id.task_list_item_task_name_tv);
             projectName = itemView.findViewById(R.id.task_list_item_project_name_tv);
             deleteImage = itemView.findViewById(R.id.task_list_item_delete_image);
+
         }
 
-        public void bind(@NonNull final TaskViewStateItems listActivityViewStateItems) {
+        public void bind(@NonNull final TaskViewStateItems listActivityViewStateItems, @NonNull OnDeleteListener listener) {
             projectColorImage.setColorFilter(listActivityViewStateItems.getProjectColor());
             taskNameTv.setText(listActivityViewStateItems.getTaskName());
             projectName.setText(listActivityViewStateItems.getProjectName());
 
+            deleteImage.setOnClickListener(view -> {
+                listener.deleteItem(listActivityViewStateItems.getId());
+            });
         }
     }
 
