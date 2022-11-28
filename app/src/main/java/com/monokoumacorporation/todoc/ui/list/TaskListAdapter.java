@@ -1,6 +1,5 @@
 package com.monokoumacorporation.todoc.ui.list;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,8 +28,7 @@ public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAda
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(
-            LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.task_list_items, parent, false)
+            LayoutInflater.from(parent.getContext()).inflate(R.layout.task_list_items, parent, false)
         );
     }
 
@@ -63,14 +60,13 @@ public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAda
             projectName.setText(listActivityViewStateItems.getProjectName());
             materialDivider.setDividerColor(listActivityViewStateItems.getProjectColor());
             deleteImage.setColorFilter(listActivityViewStateItems.getProjectColor());
-            deleteImage.setOnClickListener(view -> {
-                listener.deleteItem(listActivityViewStateItems.getId());
-            });
+            deleteImage.setOnClickListener(view -> listener.deleteItem(listActivityViewStateItems.getId()));
         }
     }
 
     private static class TaskListAdapterDiffCallBack extends DiffUtil.ItemCallback<TaskViewStateItems> {
 
+        // TODO MONO Use these 2 to handle good UX
         @Override
         public boolean areItemsTheSame(@NonNull TaskViewStateItems oldItem, @NonNull TaskViewStateItems newItem) {
             return false;

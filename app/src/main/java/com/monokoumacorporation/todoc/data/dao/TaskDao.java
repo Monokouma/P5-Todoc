@@ -11,7 +11,7 @@ import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import java.util.List;
 
 @Dao
-public interface TaskDAO {
+public interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertTask(TaskEntity task);

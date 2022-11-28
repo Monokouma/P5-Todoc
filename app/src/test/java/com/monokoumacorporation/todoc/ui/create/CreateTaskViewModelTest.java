@@ -12,6 +12,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import com.monokoumacorporation.todoc.LiveDataTestUtils;
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
+import com.monokoumacorporation.todoc.utils.TestExecutor;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,7 +38,7 @@ public class CreateTaskViewModelTest {
 
     @Before
     public void setUp() {
-        createTaskViewModel = new CreateTaskViewModel(taskRepository, resources);
+        createTaskViewModel = new CreateTaskViewModel(taskRepository, resources, new TestExecutor(), new TestExecutor());
         Mockito.doReturn(EXPECTED_TASK_NAME_ERROR).when(resources).getString(R.string.task_name_error);
     }
 
@@ -86,7 +87,7 @@ public class CreateTaskViewModelTest {
     @Test
     public void tartampion_button_selected_should_return_selected_color() {
         //Given
-        createTaskViewModel.onTartampionButtonClicked(0);
+        createTaskViewModel.onProjectButtonClicked(0);
 
         //When
         CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
@@ -223,7 +224,7 @@ public class CreateTaskViewModelTest {
     public void all_field_filled_should_create_task_and_finish_activity() {
         //Given
         createTaskViewModel.onLucidiaButtonClicked(1);
-        createTaskViewModel.onTaskTietTextChange("task_name");
+        createTaskViewModel.onTaskTextChange("task_name");
         createTaskViewModel.onAddButtonClicked();
 
         //When
@@ -317,7 +318,7 @@ public class CreateTaskViewModelTest {
     @Test
     public void no_project_selected_should_make_appear_error_tv() {
         //Given
-        createTaskViewModel.onTaskTietTextChange("task_name");
+        createTaskViewModel.onTaskTextChange("task_name");
         createTaskViewModel.onAddButtonClicked();
 
         //When
@@ -359,5 +360,12 @@ public class CreateTaskViewModelTest {
             resources.getColor(result.getCircusTextButtonColor()),
             resources.getColor(DEFAULT_TEXT_BUTTON_COLOR)
         );
+    }
+
+    @Test
+    public void verifyOnAddButtonClicked() {
+
+        //
+        Mockito.verify(taskRepository).createTask();
     }
 }

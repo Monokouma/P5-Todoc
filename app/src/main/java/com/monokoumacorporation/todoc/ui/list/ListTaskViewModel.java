@@ -2,12 +2,9 @@ package com.monokoumacorporation.todoc.ui.list;
 
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
-import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -20,8 +17,6 @@ import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,7 +37,7 @@ public class ListTaskViewModel extends ViewModel {
         this.resources = resources;
 
         LiveData<List<TaskEntity>> taskListLiveData = taskRepository.getTaskListLiveData();
-        LiveData<List<ProjectEntity>> projectListLiveData = taskRepository.getProjectistLiveData();
+        LiveData<List<ProjectEntity>> projectListLiveData = taskRepository.getProjectListLiveData();
 
         listTaskViewStateMediatorLiveData.addSource(taskListLiveData, new Observer<List<TaskEntity>>() {
             @Override

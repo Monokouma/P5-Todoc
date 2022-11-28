@@ -10,15 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.monokoumacorporation.todoc.R;
-import com.monokoumacorporation.todoc.ui.list.ListTaskViewModel;
 import com.monokoumacorporation.todoc.utils.ViewModelFactory;
 
 public class CreateTaskActivity extends AppCompatActivity {
@@ -56,7 +53,7 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         addTaskButton.setOnClickListener(view -> createTaskViewModel.onAddButtonClicked());
 
-        tartampionButton.setOnClickListener(view -> createTaskViewModel.onTartampionButtonClicked(TARTAMPION_ID));
+        tartampionButton.setOnClickListener(view -> createTaskViewModel.onProjectButtonClicked(TARTAMPION_ID));
         lucidiaButton.setOnClickListener(view -> createTaskViewModel.onLucidiaButtonClicked(LUCIDIA_ID));
         circusButton.setOnClickListener(view -> createTaskViewModel.onCircusButtonClicked(CIRCUS_ID));
 
@@ -73,7 +70,7 @@ public class CreateTaskActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                createTaskViewModel.onTaskTietTextChange(editable.toString());
+                createTaskViewModel.onTaskTextChange(editable.toString());
             }
         });
 

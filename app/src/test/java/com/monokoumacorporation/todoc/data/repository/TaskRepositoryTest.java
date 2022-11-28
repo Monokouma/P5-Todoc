@@ -8,8 +8,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.monokoumacorporation.todoc.data.dao.ProjectDAO;
-import com.monokoumacorporation.todoc.data.dao.TaskDAO;
+import com.monokoumacorporation.todoc.data.dao.ProjectDao;
+import com.monokoumacorporation.todoc.data.dao.TaskDao;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.utils.MainApplication;
 
@@ -29,8 +29,8 @@ public class TaskRepositoryTest {
     private TaskRepository taskRepository;
 
     private final Application application = Mockito.mock(MainApplication.class);
-    private final TaskDAO taskDAO = Mockito.mock(TaskDAO.class);
-    private final ProjectDAO projectDAO = Mockito.mock(ProjectDAO.class);
+    private final TaskDao taskDAO = Mockito.mock(TaskDao.class);
+    private final ProjectDao projectDAO = Mockito.mock(ProjectDao.class);
 
     @Before
     public void setUp() {

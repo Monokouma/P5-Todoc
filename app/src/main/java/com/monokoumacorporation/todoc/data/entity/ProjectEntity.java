@@ -2,6 +2,7 @@ package com.monokoumacorporation.todoc.data.entity;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -19,9 +20,19 @@ public class ProjectEntity {
     @ColorInt
     private final int color;
 
-    public ProjectEntity(long id,
-                         @NonNull String name,
-                         int color) {
+    public ProjectEntity(
+        @NonNull String name,
+        int color
+    ) {
+        this(0, name, color);
+    }
+
+    @VisibleForTesting
+    public ProjectEntity(
+        long id,
+        @NonNull String name,
+        int color
+    ) {
         this.id = id;
         this.name = name;
         this.color = color;

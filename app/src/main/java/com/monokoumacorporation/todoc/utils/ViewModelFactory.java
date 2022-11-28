@@ -12,35 +12,27 @@ import com.monokoumacorporation.todoc.ui.list.ListTaskViewModel;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-
 public class ViewModelFactory implements ViewModelProvider.Factory {
-    private static ViewModelFactory factory;
-    private final TaskRepository taskRepository;
-    private static final Executor ioExecutor = Executors.newFixedThreadPool(4);
+    private static volatile ViewModelFactory factory;
 
     public static ViewModelFactory getInstance() {
-        TodocDatabase todocDatabase = TodocDatabase.getDatabase(MainApplication.getInstance().getApplicationContext(), ioExecutor);
-
         if (factory == null) {
             synchronized (ViewModelFactory.class) {
                 if (factory == null) {
-                    factory = new ViewModelFactory(
-                        new TaskRepository(
-                            MainApplication.getInstance(),
-                            todocDatabase.getProjectDAO(),
-                            todocDatabase.getTaskDAO()
-                        )
-                    );
+                    factory = new ViewModelFactory();
                 }
             }
         }
         return factory;
     }
 
+    private final TaskRepository taskRepository;
+    private final Executor mainExecutor = new MainThreadExecutor();
+    private final Executor ioExecutor = Executors.newFixedThreadPool(4);
 
-    private ViewModelFactory(@NonNull TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-
+    private ViewModelFactory() {
+        TodocDatabase todocDatabase = TodocDatabase.getDatabase(MainApplication.getInstance().getApplicationContext(), ioExecutor);
+        taskRepository = new TaskRepository(todocDatabase.getProjectDao(), todocDatabase.getTaskDao());
     }
 
     @SuppressWarnings("unchecked")
@@ -53,15 +45,13 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
                 MainApplication.getInstance().getResources()
             );
         } else if (modelClass.isAssignableFrom(CreateTaskViewModel.class)) {
-               return (T) new CreateTaskViewModel(
-                   taskRepository,
-                   MainApplication.getInstance().getResources()
-               );
+            return (T) new CreateTaskViewModel(
+                taskRepository,
+                MainApplication.getInstance().getResources(),
+                mainExecutor,
+                ioExecutor
+            );
         }
-        //else if (modelClass.isAssignableFrom(MeetingDetailsViewModel.class)) {
-        //   return (T) new MeetingDetailsViewModel(
-        // );
-        // }
         throw new IllegalArgumentException("Unknow ViewModel");
     }
 

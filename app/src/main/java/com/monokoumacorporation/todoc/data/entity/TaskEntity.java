@@ -1,6 +1,7 @@
 package com.monokoumacorporation.todoc.data.entity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -10,31 +11,37 @@ import java.util.Objects;
 public class TaskEntity {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private final long id;
 
-    private int projectId;
+    private final long projectId;
 
     @NonNull
-    private String name;
+    private final String name;
 
+    private final long creationTimestamp;
 
-    private long creationTimestamp;
+    public TaskEntity(long projectId, @NonNull String name, long creationTimestamp) {
+        this(0, projectId, name, creationTimestamp);
+    }
 
-    public TaskEntity(int id,
-                      int projectId,
-                      @NonNull String name,
-                      long creationTimestamp) {
+    @VisibleForTesting
+    public TaskEntity(
+        long id,
+        long projectId,
+        @NonNull String name,
+        long creationTimestamp
+    ) {
         this.id = id;
         this.projectId = projectId;
         this.name = name;
         this.creationTimestamp = creationTimestamp;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public int getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
@@ -45,22 +52,6 @@ public class TaskEntity {
 
     public long getCreationTimestamp() {
         return creationTimestamp;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
-
-    public void setName(@NonNull String name) {
-        this.name = name;
-    }
-
-    public void setCreationTimestamp(long creationTimestamp) {
-        this.creationTimestamp = creationTimestamp;
     }
 
     @Override

@@ -6,16 +6,20 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
+import com.monokoumacorporation.todoc.data.entity.ProjectWithTasks;
 
 import java.util.List;
 
 @Dao
-public interface ProjectDAO {
+public interface ProjectDao {
 
     @Insert
     long insert(ProjectEntity project);
 
     @Query("SELECT * FROM project_table")
     LiveData<List<ProjectEntity>> getAll();
+
+    @Query("SELECT * FROM project_table")
+    LiveData<List<ProjectWithTasks>> getAllProjectWithTasks();
 
 }

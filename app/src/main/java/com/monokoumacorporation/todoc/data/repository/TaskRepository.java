@@ -1,12 +1,11 @@
 package com.monokoumacorporation.todoc.data.repository;
 
-import android.app.Application;
-import android.os.AsyncTask;
-
+import androidx.annotation.MainThread;
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 
-import com.monokoumacorporation.todoc.data.dao.ProjectDAO;
-import com.monokoumacorporation.todoc.data.dao.TaskDAO;
+import com.monokoumacorporation.todoc.data.dao.ProjectDao;
+import com.monokoumacorporation.todoc.data.dao.TaskDao;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
@@ -16,46 +15,39 @@ import java.util.List;
 
 public class TaskRepository {
 
-    private int id;
-    private TaskDAO taskDAO;
-    private ProjectDAO projectDAO;
-    private LiveData<List<TaskEntity>> taskListLiveData;
-    private LiveData<List<ProjectEntity>> projectListLiveData;
+    private final ProjectDao projectDao;
+    private final TaskDao taskDao;
 
-    public TaskRepository(Application application, ProjectDAO projectDAO, TaskDAO taskDAO) {
-        this.taskDAO = taskDAO;
-        this.projectDAO = projectDAO;
-        this.taskListLiveData = taskDAO.getTaskListLiveData();
-        this.projectListLiveData = projectDAO.getAll();
+    public TaskRepository(ProjectDao projectDao, TaskDao taskDao) {
+        this.projectDao = projectDao;
+        this.taskDao = taskDao;
     }
 
-    public void createTask(int projectId, String taskName) {
-        LocalDateTime now = LocalDateTime.now();
+    @WorkerThread
+    public void createTask(long projectId, String taskName) {
+        LocalDateTime now = LocalDateTime.now(); // TODO MONO Use "Clock" instead for UTs
 
         TaskEntity task = new TaskEntity(
-            id++,
             projectId,
             taskName,
             now.toEpochSecond(ZoneOffset.UTC)
         );
 
-        AsyncTask.execute(() -> {
-            taskDAO.insertTask(task);
-        });
-
+        taskDao.insertTask(task);
     }
 
+    @MainThread
     public LiveData<List<TaskEntity>> getTaskListLiveData() {
-        return taskListLiveData;
+        return taskDao.getTaskListLiveData();
     }
 
+    @WorkerThread
     public void deleteTask(long taskId) {
-        AsyncTask.execute(() -> {
-            taskDAO.delete(taskId);
-        });
+        taskDao.delete(taskId);
     }
 
-    public LiveData<List<ProjectEntity>> getProjectistLiveData() {
-        return projectListLiveData;
+    @MainThread
+    public LiveData<List<ProjectEntity>> getProjectListLiveData() {
+        return projectDao.getAll();
     }
 }

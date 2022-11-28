@@ -10,8 +10,8 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.monokoumacorporation.todoc.R;
-import com.monokoumacorporation.todoc.data.dao.ProjectDAO;
-import com.monokoumacorporation.todoc.data.dao.TaskDAO;
+import com.monokoumacorporation.todoc.data.dao.ProjectDao;
+import com.monokoumacorporation.todoc.data.dao.TaskDao;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
@@ -20,13 +20,13 @@ import java.util.concurrent.Executor;
 @Database(entities = {TaskEntity.class, ProjectEntity.class}, version = 1, exportSchema = false)
 public abstract class TodocDatabase extends RoomDatabase {
 
-    public abstract TaskDAO getTaskDAO();
+    public abstract TaskDao getTaskDao();
 
-    public abstract ProjectDAO getProjectDAO();
+    public abstract ProjectDao getProjectDao();
 
     private static volatile TodocDatabase INSTANCE;
 
-    private final static String DATABASE_NAME = "todoc_database6";
+    private final static String DATABASE_NAME = "todoc_database";
 
     public static TodocDatabase getDatabase(@NonNull Context context, @NonNull Executor ioExecutor) {
         if (INSTANCE == null) {
@@ -42,7 +42,7 @@ public abstract class TodocDatabase extends RoomDatabase {
     private static TodocDatabase create(
         @NonNull Context context,
         @NonNull Executor ioExecutor
-        ) {
+    ) {
         Builder<TodocDatabase> builder = Room.databaseBuilder(
             context.getApplicationContext(),
             TodocDatabase.class,
@@ -54,29 +54,24 @@ public abstract class TodocDatabase extends RoomDatabase {
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
                 ioExecutor.execute(() -> {
-                    ProjectDAO projectDAO = TodocDatabase.getDatabase(context, ioExecutor).getProjectDAO();
+                    ProjectDao projectDao = TodocDatabase.getDatabase(context, ioExecutor).getProjectDao();
 
-
-                    projectDAO.insert(
+                    projectDao.insert(
                         new ProjectEntity(
-                            1,
                             context.getResources().getString(R.string.projet_tartampion),
                             ResourcesCompat.getColor(context.getResources(), R.color.dogwood_rose, null)
                         )
                     );
 
-
-                    projectDAO.insert(
+                    projectDao.insert(
                         new ProjectEntity(
-                            2,
                             context.getResources().getString(R.string.projet_lucidia),
                             ResourcesCompat.getColor(context.getResources(), R.color.green_munsell, null)
                         )
                     );
 
-                    projectDAO.insert(
+                    projectDao.insert(
                         new ProjectEntity(
-                            3,
                             context.getResources().getString(R.string.projet_circus),
                             ResourcesCompat.getColor(context.getResources(), R.color.marigold, null)
                         )
