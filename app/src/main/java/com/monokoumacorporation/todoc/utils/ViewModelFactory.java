@@ -27,12 +27,13 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         return factory;
     }
 
+    private final TodocDatabase todocDatabase;
     private final TaskRepository taskRepository;
     private final Executor mainExecutor = new MainThreadExecutor();
     private final Executor ioExecutor = Executors.newFixedThreadPool(4);
 
     private ViewModelFactory() {
-        TodocDatabase todocDatabase = TodocDatabase.getDatabase(MainApplication.getInstance().getApplicationContext(), ioExecutor);
+        todocDatabase = TodocDatabase.getDatabase(MainApplication.getInstance().getApplicationContext(), ioExecutor);
         taskRepository = new TaskRepository(todocDatabase.getProjectDao(), todocDatabase.getTaskDao(), Clock.systemDefaultZone());
     }
 
@@ -48,8 +49,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             );
         } else if (modelClass.isAssignableFrom(CreateTaskViewModel.class)) {
             return (T) new CreateTaskViewModel(
+                todocDatabase.getProjectDao(),
                 taskRepository,
-                MainApplication.getInstance().getResources(),
+                MainApplication.getInstance(),
                 mainExecutor,
                 ioExecutor
             );

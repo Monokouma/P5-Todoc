@@ -1,10 +1,11 @@
 package com.monokoumacorporation.todoc.ui.create;
 
-import android.content.res.Resources;
-import android.util.Log;
+import android.app.Application;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,69 +13,94 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.monokoumacorporation.todoc.R;
+import com.monokoumacorporation.todoc.data.dao.ProjectDao;
+import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
-import com.monokoumacorporation.todoc.ui.create.button.Button;
 import com.monokoumacorporation.todoc.ui.create.button.ProjectButtonViewStateItem;
 import com.monokoumacorporation.todoc.utils.SingleLiveEvent;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 
 
 public class CreateTaskViewModel extends ViewModel {
 
+    @NonNull
     private final TaskRepository taskRepository;
-    private final Resources resources;
+    @NonNull
+    private final Application context;
+    @NonNull
     private final Executor mainExecutor;
+    @NonNull
     private final Executor ioExecutor;
 
     private final MediatorLiveData<CreateTaskViewState> taskViewStateMediatorLiveData = new MediatorLiveData<>();
-    private final MutableLiveData<Map<Button, Boolean>> buttonMapMutableLiveData = new MutableLiveData<>(populateWithButton());
+    private final MutableLiveData<Long> selectedProjectIdMutableLiveData = new MutableLiveData<>(null);
 
     private final SingleLiveEvent<Void> onFinishActivityEvent = new SingleLiveEvent<>();
 
     private String taskName;
-    private Integer projectId;
 
     public CreateTaskViewModel(
-        TaskRepository taskRepository,
-        Resources resources,
-        Executor mainExecutor,
-        Executor ioExecutor
+        @NonNull ProjectDao projectDao, // TODO MONO Fix petite triche
+        @NonNull TaskRepository taskRepository,
+        @NonNull Application context,
+        @NonNull Executor mainExecutor,
+        @NonNull Executor ioExecutor
     ) {
         this.taskRepository = taskRepository;
-        this.resources = resources;
+        this.context = context;
         this.mainExecutor = mainExecutor;
         this.ioExecutor = ioExecutor;
 
-        taskViewStateMediatorLiveData.addSource(buttonMapMutableLiveData, new Observer<Map<Button, Boolean>>() {
+        LiveData<List<ProjectEntity>> projectsLiveData = projectDao.getAll();
+
+        taskViewStateMediatorLiveData.addSource(selectedProjectIdMutableLiveData, new Observer<Long>() {
             @Override
-            public void onChanged(Map<Button, Boolean> buttonBooleanMap) {
-
-                List<ProjectButtonViewStateItem> projectButtonViewStateItemList = new ArrayList<>();
-
-                for (Map.Entry<Button, Boolean> entry : buttonBooleanMap.entrySet()) {
-                    projectButtonViewStateItemList.add(
-                        new ProjectButtonViewStateItem(
-                            entry.getKey().getId(),
-                            entry.getKey().getBackgroundColor(),
-                            entry.getKey().getProjectName()
-                        )
-                    );
-                }
-
-                taskViewStateMediatorLiveData.setValue(
-                    new CreateTaskViewState(
-                        null,
-                        View.GONE,
-                        projectButtonViewStateItemList
-                    )
-                );
+            public void onChanged(Long selectedProjectId) {
+                combine(selectedProjectId, projectsLiveData.getValue());
             }
         });
+
+        taskViewStateMediatorLiveData.addSource(projectsLiveData, new Observer<List<ProjectEntity>>() {
+            @Override
+            public void onChanged(List<ProjectEntity> projectEntities) {
+                combine(selectedProjectIdMutableLiveData.getValue(), projectEntities);
+            }
+        });
+    }
+
+    private void combine(@Nullable Long selectedProjectId, @Nullable List<ProjectEntity> projects) {
+        List<ProjectButtonViewStateItem> projectButtonViewStateItemList = new ArrayList<>();
+
+        if (projects != null) {
+            for (ProjectEntity project : projects) {
+                final ProjectButtonViewStateItem item;
+                if (selectedProjectId != null && project.getId() == selectedProjectId) {
+                    item = new ProjectButtonViewStateItem(
+                        project.getId(),
+                        project.getColor(),
+                        project.getName()
+                    );
+                } else {
+                    item = new ProjectButtonViewStateItem(
+                        project.getId(),
+                        ContextCompat.getColor(context, R.color.charcoal),
+                        project.getName()
+                    );
+                }
+                projectButtonViewStateItemList.add(item);
+            }
+        }
+
+        taskViewStateMediatorLiveData.setValue(
+            new CreateTaskViewState(
+                null,
+                View.GONE,
+                projectButtonViewStateItemList
+            )
+        );
     }
 
     public void onTaskTextChange(String taskName) {
@@ -86,22 +112,28 @@ public class CreateTaskViewModel extends ViewModel {
                 new CreateTaskViewState(
                     null,
                     previous.getCheckboxErrorVisibility(),
-                    getButtonList()
+                    previous.getProjectButtonViewStateItemList()
                 )
             );
         }
     }
 
+    public void onProjectButtonClicked(long projectId) {
+        selectedProjectIdMutableLiveData.setValue(projectId);
+    }
+
     public void onAddButtonClicked() {
         final CreateTaskViewState previous = taskViewStateMediatorLiveData.getValue();
+
+        Long projectId = selectedProjectIdMutableLiveData.getValue();
 
         if (previous != null) {
             if (taskName == null || taskName.isEmpty()) {
                 taskViewStateMediatorLiveData.setValue(
                     new CreateTaskViewState(
-                        resources.getString(R.string.task_name_error),
+                        context.getString(R.string.task_name_error),
                         previous.getCheckboxErrorVisibility(),
-                        getButtonList()
+                        previous.getProjectButtonViewStateItemList()
                     )
                 );
             } else if (projectId == null) {
@@ -109,7 +141,7 @@ public class CreateTaskViewModel extends ViewModel {
                     new CreateTaskViewState(
                         previous.getTaskInputErrorMessage(),
                         View.VISIBLE,
-                        getButtonList()
+                        previous.getProjectButtonViewStateItemList()
                     )
                 );
             } else {
@@ -117,11 +149,12 @@ public class CreateTaskViewModel extends ViewModel {
                     new CreateTaskViewState(
                         null,
                         View.GONE,
-                        getButtonList()
+                        previous.getProjectButtonViewStateItemList()
                     )
                 );
                 ioExecutor.execute(() -> {
                     taskRepository.createTask(projectId, taskName);
+                    //noinspection Convert2MethodRef
                     mainExecutor.execute(() -> onFinishActivityEvent.call());
                 });
             }
@@ -134,35 +167,5 @@ public class CreateTaskViewModel extends ViewModel {
 
     public SingleLiveEvent<Void> getOnFinishActivityEvent() {
         return onFinishActivityEvent;
-    }
-
-    public void onProjectButtonClicked(int projectId) {
-        this.projectId = projectId;
-
-    }
-
-    private List<ProjectButtonViewStateItem> getButtonList() {
-        List<ProjectButtonViewStateItem> projectButtonViewStateItemList = new ArrayList<>();
-
-        for (Button button : Button.values()) {
-            projectButtonViewStateItemList.add(
-                new ProjectButtonViewStateItem(
-                    button.getId(),
-                    button.getBackgroundColor(),
-                    button.getProjectName()
-                )
-            );
-        }
-
-        return projectButtonViewStateItemList;
-    }
-
-    @NonNull
-    private Map<Button, Boolean> populateWithButton() {
-        Map<Button, Boolean> buttons = new LinkedHashMap<>();
-        for (Button button : Button.values()) {
-            buttons.put(button, false);
-        }
-        return buttons;
     }
 }

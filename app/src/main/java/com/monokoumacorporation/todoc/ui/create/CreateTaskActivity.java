@@ -73,7 +73,7 @@ public class CreateTaskActivity extends AppCompatActivity implements OnProjectBu
     }
 
     @Override
-    public void onProjectButtonClicked(int buttonId) {
+    public void onProjectButtonClicked(long buttonId) {
         createTaskViewModel.onProjectButtonClicked(buttonId);
     }
 }

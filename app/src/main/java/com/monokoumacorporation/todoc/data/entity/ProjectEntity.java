@@ -1,6 +1,7 @@
 package com.monokoumacorporation.todoc.data.entity;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.room.Entity;
@@ -49,6 +50,7 @@ public class ProjectEntity {
         return name;
     }
 
+    @ColorInt
     public int getColor() {
         return color;
     }
