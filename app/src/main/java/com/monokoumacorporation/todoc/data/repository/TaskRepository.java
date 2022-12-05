@@ -9,6 +9,7 @@ import com.monokoumacorporation.todoc.data.dao.TaskDao;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -17,22 +18,21 @@ public class TaskRepository {
 
     private final ProjectDao projectDao;
     private final TaskDao taskDao;
+    private final Clock clock;
 
-    public TaskRepository(ProjectDao projectDao, TaskDao taskDao) {
+    public TaskRepository(ProjectDao projectDao, TaskDao taskDao, Clock clock) {
         this.projectDao = projectDao;
         this.taskDao = taskDao;
+        this.clock = clock;
     }
 
     @WorkerThread
     public void createTask(long projectId, String taskName) {
-        LocalDateTime now = LocalDateTime.now(); // TODO MONO Use "Clock" instead for UTs
-
         TaskEntity task = new TaskEntity(
             projectId,
             taskName,
-            now.toEpochSecond(ZoneOffset.UTC)
+            clock.millis()
         );
-
         taskDao.insertTask(task);
     }
 

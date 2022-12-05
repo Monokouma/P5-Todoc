@@ -9,6 +9,7 @@ import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 import com.monokoumacorporation.todoc.ui.create.CreateTaskViewModel;
 import com.monokoumacorporation.todoc.ui.list.ListTaskViewModel;
 
+import java.time.Clock;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -32,7 +33,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
 
     private ViewModelFactory() {
         TodocDatabase todocDatabase = TodocDatabase.getDatabase(MainApplication.getInstance().getApplicationContext(), ioExecutor);
-        taskRepository = new TaskRepository(todocDatabase.getProjectDao(), todocDatabase.getTaskDao());
+        taskRepository = new TaskRepository(todocDatabase.getProjectDao(), todocDatabase.getTaskDao(), Clock.systemDefaultZone());
     }
 
     @SuppressWarnings("unchecked")
@@ -42,7 +43,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(ListTaskViewModel.class)) {
             return (T) new ListTaskViewModel(
                 taskRepository,
-                MainApplication.getInstance().getResources()
+                MainApplication.getInstance().getResources(),
+                ioExecutor
             );
         } else if (modelClass.isAssignableFrom(CreateTaskViewModel.class)) {
             return (T) new CreateTaskViewModel(

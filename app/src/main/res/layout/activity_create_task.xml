@@ -98,40 +98,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_task_act_tartampion_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="@string/projet_tartampion"
-        app:backgroundTint="@color/charcoal"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/create_task_act_button_rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:itemCount="3"
+        tools:listitem="@layout/project_button_list_items"
         app:layout_constraintTop_toBottomOf="@id/create_task_act_error_checkbox_tv"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_task_act_lucidia_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/projet_lucidia"
-        android:layout_margin="16dp"
-        app:backgroundTint="@color/charcoal"
-        app:layout_constraintTop_toBottomOf="@id/create_task_act_tartampion_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_task_act_circus_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="@string/projet_circus"
-        app:backgroundTint="@color/charcoal"
-        app:layout_constraintTop_toBottomOf="@id/create_task_act_lucidia_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/create_task_act_add_task_button"
         />
 
     <com.google.android.material.button.MaterialButton
@@ -141,11 +115,9 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/black"
         android:text="@string/ajouter"
-        app:layout_constraintTop_toBottomOf="@id/create_task_act_circus_button"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="@color/white"
-       />
+        app:rippleColor="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

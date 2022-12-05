@@ -4,6 +4,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class ProjectEntity {
     @ColorInt
     private final int color;
 
+    @Ignore
     public ProjectEntity(
         @NonNull String name,
         int color

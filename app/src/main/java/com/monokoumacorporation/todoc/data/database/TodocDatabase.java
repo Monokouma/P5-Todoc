@@ -1,6 +1,7 @@
 package com.monokoumacorporation.todoc.data.database;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -26,7 +27,7 @@ public abstract class TodocDatabase extends RoomDatabase {
 
     private static volatile TodocDatabase INSTANCE;
 
-    private final static String DATABASE_NAME = "todoc_database";
+    private final static String DATABASE_NAME = "bla";
 
     public static TodocDatabase getDatabase(@NonNull Context context, @NonNull Executor ioExecutor) {
         if (INSTANCE == null) {
@@ -55,7 +56,7 @@ public abstract class TodocDatabase extends RoomDatabase {
                 super.onCreate(db);
                 ioExecutor.execute(() -> {
                     ProjectDao projectDao = TodocDatabase.getDatabase(context, ioExecutor).getProjectDao();
-
+                    Log.i("Monokouma", "HERE");
                     projectDao.insert(
                         new ProjectEntity(
                             context.getResources().getString(R.string.projet_tartampion),

@@ -3,6 +3,7 @@ package com.monokoumacorporation.todoc.data.entity;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class TaskEntity {
 
     private final long creationTimestamp;
 
+    @Ignore
     public TaskEntity(long projectId, @NonNull String name, long creationTimestamp) {
         this(0, projectId, name, creationTimestamp);
     }

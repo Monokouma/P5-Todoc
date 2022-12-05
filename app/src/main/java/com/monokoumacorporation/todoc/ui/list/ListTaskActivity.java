@@ -34,9 +34,10 @@ public class ListTaskActivity extends AppCompatActivity implements OnDeleteListe
         FloatingActionButton floatingActionButton = findViewById(R.id.list_task_act_fab);
         floatingActionButton.setOnClickListener(view -> startActivity(CreateTaskActivity.navigate(this)));
 
-        taskRV.setLayoutManager(new LinearLayoutManager(this));
+        taskRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         final TaskListAdapter taskListAdapter = new TaskListAdapter(this);
         taskRV.setAdapter(taskListAdapter);
+
         listTaskViewModel.getTaskListMutableLiveData().observe(this, new Observer<ListTaskViewState>() {
             @Override
             public void onChanged(ListTaskViewState listTaskViewState) {

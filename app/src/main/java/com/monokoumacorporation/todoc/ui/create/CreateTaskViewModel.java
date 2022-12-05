@@ -1,16 +1,26 @@
 package com.monokoumacorporation.todoc.ui.create;
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
+import com.monokoumacorporation.todoc.ui.create.button.Button;
+import com.monokoumacorporation.todoc.ui.create.button.ProjectButtonViewStateItem;
 import com.monokoumacorporation.todoc.utils.SingleLiveEvent;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 
@@ -21,7 +31,9 @@ public class CreateTaskViewModel extends ViewModel {
     private final Executor mainExecutor;
     private final Executor ioExecutor;
 
-    private final MutableLiveData<CreateTaskViewState> createTaskViewStateMutableLiveData = new MutableLiveData<>();
+    private final MediatorLiveData<CreateTaskViewState> taskViewStateMediatorLiveData = new MediatorLiveData<>();
+    private final MutableLiveData<Map<Button, Boolean>> buttonMapMutableLiveData = new MutableLiveData<>(populateWithButton());
+
     private final SingleLiveEvent<Void> onFinishActivityEvent = new SingleLiveEvent<>();
 
     private String taskName;
@@ -38,95 +50,86 @@ public class CreateTaskViewModel extends ViewModel {
         this.mainExecutor = mainExecutor;
         this.ioExecutor = ioExecutor;
 
-        createTaskViewStateMutableLiveData.setValue(
-            new CreateTaskViewState(
-                null,
-                View.GONE,
-                resources.getColor(R.color.charcoal),
-                resources.getColor(R.color.charcoal),
-                resources.getColor(R.color.charcoal),
-                resources.getColor(R.color.white),
-                resources.getColor(R.color.white),
-                resources.getColor(R.color.white)
-            )
-        );
+        taskViewStateMediatorLiveData.addSource(buttonMapMutableLiveData, new Observer<Map<Button, Boolean>>() {
+            @Override
+            public void onChanged(Map<Button, Boolean> buttonBooleanMap) {
+
+                List<ProjectButtonViewStateItem> projectButtonViewStateItemList = new ArrayList<>();
+
+                for (Map.Entry<Button, Boolean> entry : buttonBooleanMap.entrySet()) {
+                    projectButtonViewStateItemList.add(
+                        new ProjectButtonViewStateItem(
+                            entry.getKey().getId(),
+                            entry.getKey().getBackgroundColor(),
+                            entry.getKey().getProjectName()
+                        )
+                    );
+                }
+
+                taskViewStateMediatorLiveData.setValue(
+                    new CreateTaskViewState(
+                        null,
+                        View.GONE,
+                        projectButtonViewStateItemList
+                    )
+                );
+            }
+        });
     }
 
     public void onTaskTextChange(String taskName) {
         this.taskName = taskName;
-        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+        final CreateTaskViewState previous = taskViewStateMediatorLiveData.getValue();
 
         if (previous != null) {
-            createTaskViewStateMutableLiveData.setValue(
+            taskViewStateMediatorLiveData.setValue(
                 new CreateTaskViewState(
                     null,
                     previous.getCheckboxErrorVisibility(),
-                    previous.getTartampionButtonBackgroundColor(),
-                    previous.getLucidiaButtonBackgroundColor(),
-                    previous.getCircusButtonBackgroundColor(),
-                    previous.getTartampionTextButtonColor(),
-                    previous.getLucidiaTextButtonColor(),
-                    previous.getCircusTextButtonColor()
+                    getButtonList()
                 )
             );
         }
     }
 
     public void onAddButtonClicked() {
-        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
+        final CreateTaskViewState previous = taskViewStateMediatorLiveData.getValue();
 
         if (previous != null) {
             if (taskName == null || taskName.isEmpty()) {
-                createTaskViewStateMutableLiveData.setValue(
+                taskViewStateMediatorLiveData.setValue(
                     new CreateTaskViewState(
                         resources.getString(R.string.task_name_error),
                         previous.getCheckboxErrorVisibility(),
-                        previous.getTartampionButtonBackgroundColor(),
-                        previous.getLucidiaButtonBackgroundColor(),
-                        previous.getCircusButtonBackgroundColor(),
-                        previous.getTartampionTextButtonColor(),
-                        previous.getLucidiaTextButtonColor(),
-                        previous.getCircusTextButtonColor()
+                        getButtonList()
                     )
                 );
             } else if (projectId == null) {
-                createTaskViewStateMutableLiveData.setValue(
+                taskViewStateMediatorLiveData.setValue(
                     new CreateTaskViewState(
                         previous.getTaskInputErrorMessage(),
                         View.VISIBLE,
-                        previous.getTartampionButtonBackgroundColor(),
-                        previous.getLucidiaButtonBackgroundColor(),
-                        previous.getCircusButtonBackgroundColor(),
-                        previous.getTartampionTextButtonColor(),
-                        previous.getLucidiaTextButtonColor(),
-                        previous.getCircusTextButtonColor()
+                        getButtonList()
                     )
                 );
             } else {
-                createTaskViewStateMutableLiveData.setValue(
+                taskViewStateMediatorLiveData.setValue(
                     new CreateTaskViewState(
                         null,
                         View.GONE,
-                        previous.getTartampionButtonBackgroundColor(),
-                        previous.getLucidiaButtonBackgroundColor(),
-                        previous.getCircusButtonBackgroundColor(),
-                        previous.getTartampionTextButtonColor(),
-                        previous.getLucidiaTextButtonColor(),
-                        previous.getCircusTextButtonColor()
+                        getButtonList()
                     )
                 );
                 ioExecutor.execute(() -> {
                     taskRepository.createTask(projectId, taskName);
-
-                    //noinspection Convert2MethodRef
                     mainExecutor.execute(() -> onFinishActivityEvent.call());
                 });
             }
         }
     }
 
-    public LiveData<CreateTaskViewState> getCreateTaskViewStateMutableLiveData() {
-        return createTaskViewStateMutableLiveData;
+    public LiveData<CreateTaskViewState> getTaskViewStateMediatorLiveData() {
+        return taskViewStateMediatorLiveData;
     }
 
     public SingleLiveEvent<Void> getOnFinishActivityEvent() {
@@ -135,57 +138,31 @@ public class CreateTaskViewModel extends ViewModel {
 
     public void onProjectButtonClicked(int projectId) {
         this.projectId = projectId;
-//        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
-//        createTaskViewStateMutableLiveData.setValue(
-//            new CreateTaskViewState(
-//                previous.getTaskInputErrorMessage(),
-//                View.GONE,
-//                resources.getColor(R.color.dogwood_rose),
-//                resources.getColor(R.color.charcoal),
-//                resources.getColor(R.color.charcoal),
-//                resources.getColor(R.color.white),
-//                resources.getColor(R.color.white),
-//                resources.getColor(R.color.white)
-//            )
-//        );
 
     }
-//
-//    public void onLucidiaButtonClicked(int lucidiaId) {
-//        projectId = lucidiaId;
-//        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
-//        createTaskViewStateMutableLiveData.setValue(
-//            new CreateTaskViewState(
-//                previous.getTaskInputErrorMessage(),
-//                View.GONE,
-//
-//                resources.getColor(R.color.charcoal),
-//                resources.getColor(R.color.green_munsell),
-//                resources.getColor(R.color.charcoal),
-//
-//                resources.getColor(R.color.white),
-//                resources.getColor(R.color.white),
-//                resources.getColor(R.color.white)
-//            )
-//        );
-//    }
-//
-//    public void onCircusButtonClicked(int circusId) {
-//        projectId = circusId;
-//        final CreateTaskViewState previous = createTaskViewStateMutableLiveData.getValue();
-//        createTaskViewStateMutableLiveData.setValue(
-//            new CreateTaskViewState(
-//                previous.getTaskInputErrorMessage(),
-//                View.GONE,
-//
-//                resources.getColor(R.color.charcoal),
-//                resources.getColor(R.color.charcoal),
-//                resources.getColor(R.color.marigold),
-//
-//                resources.getColor(R.color.white),
-//                resources.getColor(R.color.white),
-//                resources.getColor(R.color.white)
-//            )
-//        );
-//    }
+
+    private List<ProjectButtonViewStateItem> getButtonList() {
+        List<ProjectButtonViewStateItem> projectButtonViewStateItemList = new ArrayList<>();
+
+        for (Button button : Button.values()) {
+            projectButtonViewStateItemList.add(
+                new ProjectButtonViewStateItem(
+                    button.getId(),
+                    button.getBackgroundColor(),
+                    button.getProjectName()
+                )
+            );
+        }
+
+        return projectButtonViewStateItemList;
+    }
+
+    @NonNull
+    private Map<Button, Boolean> populateWithButton() {
+        Map<Button, Boolean> buttons = new LinkedHashMap<>();
+        for (Button button : Button.values()) {
+            buttons.put(button, false);
+        }
+        return buttons;
+    }
 }

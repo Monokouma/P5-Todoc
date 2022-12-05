@@ -1,9 +1,11 @@
 package com.monokoumacorporation.todoc.ui.create;
 
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.monokoumacorporation.todoc.ui.create.button.ProjectButtonViewStateItem;
+
+import java.util.List;
 import java.util.Objects;
 
 public class CreateTaskViewState {
@@ -13,40 +15,13 @@ public class CreateTaskViewState {
 
     private final int checkboxErrorVisibility;
 
-    @ColorRes
-    private final int tartampionButtonBackgroundColor;
+    @NonNull
+    private final List<ProjectButtonViewStateItem> projectButtonViewStateItemList;
 
-    @ColorRes
-    private final int lucidiaButtonBackgroundColor;
-
-    @ColorRes
-    private final int circusButtonBackgroundColor;
-
-    @ColorRes
-    private final int tartampionTextButtonColor;
-
-    @ColorRes
-    private final int lucidiaTextButtonColor;
-
-    @ColorRes
-    private final int circusTextButtonColor;
-
-    public CreateTaskViewState(@Nullable String taskInputErrorMessage,
-                               int checkboxErrorVisibility,
-                               int tartampionButtonBackgroundColor,
-                               int lucidiaButtonBackgroundColor,
-                               int circusButtonBackgroundColor,
-                               int tartampionTextButtonColor,
-                               int lucidiaTextButtonColor,
-                               int circusTextButtonColor) {
+    public CreateTaskViewState(@Nullable String taskInputErrorMessage, int checkboxErrorVisibility, @NonNull List<ProjectButtonViewStateItem> projectButtonViewStateItemList) {
         this.taskInputErrorMessage = taskInputErrorMessage;
         this.checkboxErrorVisibility = checkboxErrorVisibility;
-        this.tartampionButtonBackgroundColor = tartampionButtonBackgroundColor;
-        this.lucidiaButtonBackgroundColor = lucidiaButtonBackgroundColor;
-        this.circusButtonBackgroundColor = circusButtonBackgroundColor;
-        this.tartampionTextButtonColor = tartampionTextButtonColor;
-        this.lucidiaTextButtonColor = lucidiaTextButtonColor;
-        this.circusTextButtonColor = circusTextButtonColor;
+        this.projectButtonViewStateItemList = projectButtonViewStateItemList;
     }
 
     @Nullable
@@ -58,28 +33,9 @@ public class CreateTaskViewState {
         return checkboxErrorVisibility;
     }
 
-    public int getTartampionButtonBackgroundColor() {
-        return tartampionButtonBackgroundColor;
-    }
-
-    public int getLucidiaButtonBackgroundColor() {
-        return lucidiaButtonBackgroundColor;
-    }
-
-    public int getCircusButtonBackgroundColor() {
-        return circusButtonBackgroundColor;
-    }
-
-    public int getTartampionTextButtonColor() {
-        return tartampionTextButtonColor;
-    }
-
-    public int getLucidiaTextButtonColor() {
-        return lucidiaTextButtonColor;
-    }
-
-    public int getCircusTextButtonColor() {
-        return circusTextButtonColor;
+    @NonNull
+    public List<ProjectButtonViewStateItem> getProjectButtonViewStateItemList() {
+        return projectButtonViewStateItemList;
     }
 
     @Override
@@ -87,12 +43,12 @@ public class CreateTaskViewState {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreateTaskViewState that = (CreateTaskViewState) o;
-        return checkboxErrorVisibility == that.checkboxErrorVisibility && tartampionButtonBackgroundColor == that.tartampionButtonBackgroundColor && lucidiaButtonBackgroundColor == that.lucidiaButtonBackgroundColor && circusButtonBackgroundColor == that.circusButtonBackgroundColor && tartampionTextButtonColor == that.tartampionTextButtonColor && lucidiaTextButtonColor == that.lucidiaTextButtonColor && circusTextButtonColor == that.circusTextButtonColor && Objects.equals(taskInputErrorMessage, that.taskInputErrorMessage);
+        return checkboxErrorVisibility == that.checkboxErrorVisibility && Objects.equals(taskInputErrorMessage, that.taskInputErrorMessage) && projectButtonViewStateItemList.equals(that.projectButtonViewStateItemList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskInputErrorMessage, checkboxErrorVisibility, tartampionButtonBackgroundColor, lucidiaButtonBackgroundColor, circusButtonBackgroundColor, tartampionTextButtonColor, lucidiaTextButtonColor, circusTextButtonColor);
+        return Objects.hash(taskInputErrorMessage, checkboxErrorVisibility, projectButtonViewStateItemList);
     }
 
     @NonNull
@@ -101,12 +57,7 @@ public class CreateTaskViewState {
         return "CreateTaskViewState{" +
             "taskInputErrorMessage='" + taskInputErrorMessage + '\'' +
             ", checkboxErrorVisibility=" + checkboxErrorVisibility +
-            ", tartampionButtonBackgroundColor=" + tartampionButtonBackgroundColor +
-            ", lucidiaButtonBackgroundColor=" + lucidiaButtonBackgroundColor +
-            ", circusButtonBackgroundColor=" + circusButtonBackgroundColor +
-            ", tartampionTextButtonColor=" + tartampionTextButtonColor +
-            ", lucidiaTextButtonColor=" + lucidiaTextButtonColor +
-            ", circusTextButtonColor=" + circusTextButtonColor +
+            ", projectButtonViewStateItemList=" + projectButtonViewStateItemList +
             '}';
     }
 }

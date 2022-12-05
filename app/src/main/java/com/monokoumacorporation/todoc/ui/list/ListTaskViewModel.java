@@ -19,11 +19,13 @@ import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 
 public class ListTaskViewModel extends ViewModel {
 
     private final MediatorLiveData<ListTaskViewState> listTaskViewStateMediatorLiveData = new MediatorLiveData<>();
+
     private final MutableLiveData<Boolean> isAlphabeticalOrderEnableMutableLiveData = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isAlphabeticalInvertedOrderEnableMutableLiveData = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isOlderFirstEnableMutableLiveData = new MutableLiveData<>(false);
@@ -31,10 +33,12 @@ public class ListTaskViewModel extends ViewModel {
 
     private final TaskRepository taskRepository;
     private final Resources resources;
+    private final Executor ioExecutor;
 
-    public ListTaskViewModel(TaskRepository taskRepository, Resources resources) {
+    public ListTaskViewModel(TaskRepository taskRepository, Resources resources, Executor ioExecutor) {
         this.taskRepository = taskRepository;
         this.resources = resources;
+        this.ioExecutor = ioExecutor;
 
         LiveData<List<TaskEntity>> taskListLiveData = taskRepository.getTaskListLiveData();
         LiveData<List<ProjectEntity>> projectListLiveData = taskRepository.getProjectListLiveData();
@@ -209,7 +213,9 @@ public class ListTaskViewModel extends ViewModel {
     }
 
     public void onDeleteButtonClick(long taskId) {
-        taskRepository.deleteTask(taskId);
+        ioExecutor.execute(() -> {
+            taskRepository.deleteTask(taskId);
+        });
     }
 
     public void onAlphabeticalFilterClick() {

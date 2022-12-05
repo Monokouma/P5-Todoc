@@ -45,7 +45,7 @@ public class CreateTaskViewModelTest {
     @Test
     public void nominal_case() {
         //When
-        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
 
         //Then
         assertNull(
@@ -90,7 +90,7 @@ public class CreateTaskViewModelTest {
         createTaskViewModel.onProjectButtonClicked(0);
 
         //When
-        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
 
         //Then
         assertNull(
@@ -135,7 +135,7 @@ public class CreateTaskViewModelTest {
         createTaskViewModel.onLucidiaButtonClicked(1);
 
         //When
-        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
 
         //Then
         assertNull(
@@ -181,7 +181,7 @@ public class CreateTaskViewModelTest {
 
 
         //When
-        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
 
         //Then
         assertNull(
@@ -228,7 +228,7 @@ public class CreateTaskViewModelTest {
         createTaskViewModel.onAddButtonClicked();
 
         //When
-        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
 
         //Then
         assertNull(
@@ -274,7 +274,7 @@ public class CreateTaskViewModelTest {
         createTaskViewModel.onAddButtonClicked();
 
         //When
-        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
 
         //Then
         assertEquals(
@@ -322,7 +322,7 @@ public class CreateTaskViewModelTest {
         createTaskViewModel.onAddButtonClicked();
 
         //When
-        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getCreateTaskViewStateMutableLiveData());
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
 
         //Then
         assertNull(

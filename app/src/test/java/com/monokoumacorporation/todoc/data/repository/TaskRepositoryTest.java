@@ -19,6 +19,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.time.Clock;
 import java.util.List;
 
 public class TaskRepositoryTest {
@@ -31,12 +32,13 @@ public class TaskRepositoryTest {
     private final Application application = Mockito.mock(MainApplication.class);
     private final TaskDao taskDAO = Mockito.mock(TaskDao.class);
     private final ProjectDao projectDAO = Mockito.mock(ProjectDao.class);
+    private final Clock clock = Mockito.mock(Clock.class);
 
     @Before
     public void setUp() {
 
 
-        taskRepository = new TaskRepository(application, projectDAO, taskDAO);
+        taskRepository = new TaskRepository(projectDAO, taskDAO, clock);
     }
 
     @Ignore
