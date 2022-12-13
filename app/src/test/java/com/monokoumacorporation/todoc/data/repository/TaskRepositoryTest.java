@@ -17,11 +17,14 @@ import com.monokoumacorporation.todoc.utils.MainApplication;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
 import java.time.Clock;
 import java.util.List;
 
+@RunWith(JUnit4.class)
 public class TaskRepositoryTest {
 
     @Rule
@@ -36,7 +39,7 @@ public class TaskRepositoryTest {
 
     @Before
     public void setUp() {
-        taskRepository = new TaskRepository(projectDao, taskDao, clock);
+        taskRepository = new TaskRepository(taskDao, clock);
     }
 
     @Test
@@ -55,21 +58,6 @@ public class TaskRepositoryTest {
         LiveData<List<TaskEntity>> result = taskRepository.getTaskListLiveData();
         //Then
         assertEquals(taskListLiveData, result);
-    }
-
-    @Test
-    public void verify_get_all_project() {
-        //Given
-        LiveData<List<ProjectEntity>> projectEntitiesLiveData = Mockito.spy(new MutableLiveData<>());
-        Mockito.doReturn(projectEntitiesLiveData).when(projectDao).getAll();
-
-        // When
-        LiveData<List<ProjectEntity>> result = taskRepository.getProjectListLiveData();
-
-        // Then
-        assertEquals(projectEntitiesLiveData, result);
-        Mockito.verify(projectDao).getAll();
-        Mockito.verifyNoMoreInteractions(taskDao, projectDao);
     }
 
     @Test

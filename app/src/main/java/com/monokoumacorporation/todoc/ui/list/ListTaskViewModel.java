@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModel;
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
+import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 
 import java.util.ArrayList;
@@ -37,13 +38,13 @@ public class ListTaskViewModel extends ViewModel {
     private final Resources resources;
     private final Executor ioExecutor;
 
-    public ListTaskViewModel(TaskRepository taskRepository, Resources resources, Executor ioExecutor) {
+    public ListTaskViewModel(TaskRepository taskRepository, Resources resources, Executor ioExecutor, ProjectRepository projectRepository) {
         this.taskRepository = taskRepository;
         this.resources = resources;
         this.ioExecutor = ioExecutor;
 
         LiveData<List<TaskEntity>> taskListLiveData = taskRepository.getTaskListLiveData();
-        LiveData<List<ProjectEntity>> projectListLiveData = taskRepository.getProjectListLiveData();
+        LiveData<List<ProjectEntity>> projectListLiveData = projectRepository.getProjectEntityList();
 
         listTaskViewStateMediatorLiveData.addSource(taskListLiveData, new Observer<List<TaskEntity>>() {
             @Override

@@ -16,11 +16,14 @@ import com.monokoumacorporation.todoc.utils.MainApplication;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
 import java.time.Clock;
 import java.util.List;
 
+@RunWith(JUnit4.class)
 public class ProjectRepositoryTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();

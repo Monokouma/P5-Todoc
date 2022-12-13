@@ -16,12 +16,10 @@ import java.util.List;
 
 public class TaskRepository {
 
-    private final ProjectDao projectDao;
     private final TaskDao taskDao;
     private final Clock clock;
 
-    public TaskRepository(ProjectDao projectDao, TaskDao taskDao, Clock clock) {
-        this.projectDao = projectDao;
+    public TaskRepository(TaskDao taskDao, Clock clock) {
         this.taskDao = taskDao;
         this.clock = clock;
     }
@@ -46,8 +44,5 @@ public class TaskRepository {
         taskDao.delete(taskId);
     }
 
-    @MainThread
-    public LiveData<List<ProjectEntity>> getProjectListLiveData() {
-        return projectDao.getAll();
-    }
+
 }
