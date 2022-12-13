@@ -1,8 +1,6 @@
 package com.monokoumacorporation.todoc.ui.list;
 
-import android.annotation.SuppressLint;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,16 +8,15 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -29,143 +26,77 @@ public class ListTaskViewModel extends ViewModel {
 
     private final MediatorLiveData<ListTaskViewState> listTaskViewStateMediatorLiveData = new MediatorLiveData<>();
 
-    private final MutableLiveData<Boolean> isAlphabeticalOrderEnableMutableLiveData = new MutableLiveData<>(false);
-    private final MutableLiveData<Boolean> isAlphabeticalInvertedOrderEnableMutableLiveData = new MutableLiveData<>(false);
-    private final MutableLiveData<Boolean> isOlderFirstEnableMutableLiveData = new MutableLiveData<>(false);
-    private final MutableLiveData<Boolean> isRecentFirstEnableMutableLiveData = new MutableLiveData<>(false);
+    private final MutableLiveData<Ordering> orderingMutableLiveData = new MutableLiveData<>(Ordering.DEFAULT);
 
-    private final TaskRepository taskRepository;
     private final Resources resources;
+    private final TaskRepository taskRepository;
     private final Executor ioExecutor;
 
-    public ListTaskViewModel(TaskRepository taskRepository, Resources resources, Executor ioExecutor, ProjectRepository projectRepository) {
-        this.taskRepository = taskRepository;
+    public ListTaskViewModel(Resources resources, ProjectRepository projectRepository, TaskRepository taskRepository, Executor ioExecutor) {
         this.resources = resources;
+        this.taskRepository = taskRepository;
         this.ioExecutor = ioExecutor;
 
         LiveData<List<TaskEntity>> taskListLiveData = taskRepository.getTaskListLiveData();
         LiveData<List<ProjectEntity>> projectListLiveData = projectRepository.getProjectEntityList();
 
-        listTaskViewStateMediatorLiveData.addSource(taskListLiveData, new Observer<List<TaskEntity>>() {
-            @Override
-            public void onChanged(List<TaskEntity> tasks) {
-                combine(tasks,
-                    isAlphabeticalOrderEnableMutableLiveData.getValue(),
-                    isAlphabeticalInvertedOrderEnableMutableLiveData.getValue(),
-                    isOlderFirstEnableMutableLiveData.getValue(),
-                    isRecentFirstEnableMutableLiveData.getValue(),
-                    projectListLiveData.getValue()
-                );
-            }
-        });
+        listTaskViewStateMediatorLiveData.addSource(
+            taskListLiveData,
+            tasks -> combine(
+                tasks,
+                orderingMutableLiveData.getValue(),
+                projectListLiveData.getValue()
+            )
+        );
 
-        listTaskViewStateMediatorLiveData.addSource(isAlphabeticalOrderEnableMutableLiveData, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isAlphabeticalOrderEnable) {
-                combine(taskListLiveData.getValue(),
-                    isAlphabeticalOrderEnable,
-                    isAlphabeticalInvertedOrderEnableMutableLiveData.getValue(),
-                    isOlderFirstEnableMutableLiveData.getValue(),
-                    isRecentFirstEnableMutableLiveData.getValue(),
-                    projectListLiveData.getValue()
-                );
-            }
-        });
+        listTaskViewStateMediatorLiveData.addSource(
+            orderingMutableLiveData,
+            ordering -> combine(
+                taskListLiveData.getValue(),
+                ordering,
+                projectListLiveData.getValue()
+            )
+        );
 
-        listTaskViewStateMediatorLiveData.addSource(isAlphabeticalInvertedOrderEnableMutableLiveData, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isAlphabeticalInvertedOrderEnable) {
-                combine(taskListLiveData.getValue(),
-                    isAlphabeticalOrderEnableMutableLiveData.getValue(),
-                    isAlphabeticalInvertedOrderEnable,
-                    isOlderFirstEnableMutableLiveData.getValue(),
-                    isRecentFirstEnableMutableLiveData.getValue(),
-                    projectListLiveData.getValue()
-                );
-            }
-        });
-
-        listTaskViewStateMediatorLiveData.addSource(isOlderFirstEnableMutableLiveData, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isOlderFirstEnable) {
-                combine(taskListLiveData.getValue(),
-                    isAlphabeticalOrderEnableMutableLiveData.getValue(),
-                    isAlphabeticalInvertedOrderEnableMutableLiveData.getValue(),
-                    isOlderFirstEnable,
-                    isRecentFirstEnableMutableLiveData.getValue(),
-                    projectListLiveData.getValue()
-                );
-            }
-        });
-
-        listTaskViewStateMediatorLiveData.addSource(isRecentFirstEnableMutableLiveData, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isRecentFirstEnable) {
-                combine(taskListLiveData.getValue(),
-                    isAlphabeticalOrderEnableMutableLiveData.getValue(),
-                    isAlphabeticalInvertedOrderEnableMutableLiveData.getValue(),
-                    isOlderFirstEnableMutableLiveData.getValue(),
-                    isRecentFirstEnable,
-                    projectListLiveData.getValue()
-                );
-            }
-        });
-        listTaskViewStateMediatorLiveData.addSource(projectListLiveData, new Observer<List<ProjectEntity>>() {
-            @Override
-            public void onChanged(List<ProjectEntity> projectEntities) {
-                combine(taskListLiveData.getValue(),
-                    isAlphabeticalOrderEnableMutableLiveData.getValue(),
-                    isAlphabeticalInvertedOrderEnableMutableLiveData.getValue(),
-                    isOlderFirstEnableMutableLiveData.getValue(),
-                    isRecentFirstEnableMutableLiveData.getValue(),
-                    projectEntities
-                );
-            }
-        });
+        listTaskViewStateMediatorLiveData.addSource(
+            projectListLiveData,
+            projectEntities -> combine(
+                taskListLiveData.getValue(),
+                orderingMutableLiveData.getValue(),
+                projectEntities
+            )
+        );
     }
 
-    private void combine(@Nullable List<TaskEntity> tasks,
-                         @Nullable Boolean isAlphabeticalOrderEnable,
-                         @Nullable Boolean isAlphabeticalInvertedOrderEnable,
-                         @Nullable Boolean isOlderFirstEnable,
-                         @Nullable Boolean isRecentFirstEnable,
-                         @Nullable List<ProjectEntity> projects) {
+    private void combine(
+        @Nullable List<TaskEntity> tasks,
+        @Nullable Ordering ordering,
+        @Nullable List<ProjectEntity> projects
+    ) {
 
-        if (tasks == null || projects == null) {
+        if (tasks == null || ordering == null || projects == null) {
             return;
         }
-        String projectName;
-        int projectColor;
 
         List<TaskViewStateItems> taskViewStateItemsList = new ArrayList<>();
 
-
         for (TaskEntity task : tasks) {
+            for (ProjectEntity project : projects) {
+                if (task.getProjectId() == project.getId()) {
+                    String projectName = project.getName();
+                    int projectColor = project.getColorInt();
 
-            if (task.getProjectId() == 1) {
-                projectName = resources.getString(R.string.projet_tartampion);
-                projectColor = resources.getColor(R.color.dogwood_rose);
-            } else if (task.getProjectId() == 2) {
-                projectName = resources.getString(R.string.projet_lucidia);
-                projectColor = resources.getColor(R.color.green_munsell);
-            } else if (task.getProjectId() == 3) {
-                projectName = resources.getString(R.string.projet_circus);
-                projectColor = resources.getColor(R.color.marigold);
-            } else {
-                projectName = resources.getString(R.string.app_name);
-                projectColor = resources.getColor(R.color.charcoal);
+                    taskViewStateItemsList.add(
+                        new TaskViewStateItems(
+                            task.getName(),
+                            projectName,
+                            projectColor,
+                            task.getId(),
+                            task.getCreationTimestamp()
+                        )
+                    );
+                }
             }
-
-
-            taskViewStateItemsList.add(
-                new TaskViewStateItems(
-                    task.getName(),
-                    projectName,
-                    projectColor,
-                    task.getId(),
-                    task.getCreationTimestamp()
-                )
-            );
         }
 
         if (taskViewStateItemsList.isEmpty()) {
@@ -178,12 +109,9 @@ public class ListTaskViewModel extends ViewModel {
         } else {
             listTaskViewStateMediatorLiveData.setValue(
                 new ListTaskViewState(
-                    getSortedTaskViewStateItems(
+                    getOrderedTaskViewStateItems(
                         taskViewStateItemsList,
-                        isAlphabeticalOrderEnable,
-                        isAlphabeticalInvertedOrderEnable,
-                        isOlderFirstEnable,
-                        isRecentFirstEnable
+                        ordering
                     ),
                     View.GONE
                 )
@@ -191,32 +119,31 @@ public class ListTaskViewModel extends ViewModel {
         }
     }
 
-    @SuppressLint("NewApi")
     @NonNull
-    private List<TaskViewStateItems> getSortedTaskViewStateItems(List<TaskViewStateItems> taskViewStateItemsList,
-                                                                 Boolean isAlphabeticalOrderEnable,
-                                                                 Boolean isAlphabeticalInvertedOrderEnable,
-                                                                 Boolean isOlderFirstEnable,
-                                                                 Boolean isRecentFirstEnable) {
-        if (isAlphabeticalOrderEnable) {
-            taskViewStateItemsList.sort(Comparator.comparing(TaskViewStateItems::getTaskName));
-            return taskViewStateItemsList;
-        } else if (isAlphabeticalInvertedOrderEnable) {
-            taskViewStateItemsList.sort(Comparator.comparing(TaskViewStateItems::getTaskName).reversed());
-            return taskViewStateItemsList;
-        } else if (isOlderFirstEnable) {
-            taskViewStateItemsList.sort(Comparator.comparing(TaskViewStateItems::getCreationTimeStamp));
-            return taskViewStateItemsList;
-        } else if (isRecentFirstEnable) {
-            taskViewStateItemsList.sort(Comparator.comparing(TaskViewStateItems::getCreationTimeStamp).reversed());
-            return taskViewStateItemsList;
-        } else {
-            return taskViewStateItemsList;
+    private List<TaskViewStateItems> getOrderedTaskViewStateItems(
+        List<TaskViewStateItems> taskViewStateItemsList,
+        Ordering ordering
+    ) {
+        switch (ordering) {
+            case ALPHABETICAL:
+                Collections.sort(taskViewStateItemsList, Comparator.comparing(TaskViewStateItems::getTaskName));
+                break;
+            case ALPHABETICAL_INVERTED:
+                Collections.sort(taskViewStateItemsList, Comparator.comparing(TaskViewStateItems::getTaskName).reversed());
+                break;
+            case OLDER_FIRST:
+                Collections.sort(taskViewStateItemsList, Comparator.comparing(TaskViewStateItems::getCreationTimeStamp));
+                break;
+            case RECENT_FIRST:
+                Collections.sort(taskViewStateItemsList, Comparator.comparing(TaskViewStateItems::getCreationTimeStamp).reversed());
+                break;
+            case DEFAULT:
+            default:
+                break;
         }
 
+        return taskViewStateItemsList;
     }
-
-
 
 
     public LiveData<ListTaskViewState> getTaskListMutableLiveData() {
@@ -224,57 +151,30 @@ public class ListTaskViewModel extends ViewModel {
     }
 
     public void onDeleteButtonClick(long taskId) {
-        ioExecutor.execute(() -> {
-            taskRepository.deleteTask(taskId);
-        });
+        ioExecutor.execute(() -> taskRepository.deleteTask(taskId));
     }
 
     public void onAlphabeticalFilterClick() {
-        if (isAlphabeticalOrderEnableMutableLiveData.getValue()) {
-            isAlphabeticalOrderEnableMutableLiveData.setValue(false);
-        } else {
-            isAlphabeticalOrderEnableMutableLiveData.setValue(true);
-
-            isAlphabeticalInvertedOrderEnableMutableLiveData.setValue(false);
-            isOlderFirstEnableMutableLiveData.setValue(false);
-            isRecentFirstEnableMutableLiveData.setValue(false);
-        }
+        orderingMutableLiveData.setValue(Ordering.ALPHABETICAL);
     }
 
     public void onAlphabeticalInvertedFilterClick() {
-        if (isAlphabeticalInvertedOrderEnableMutableLiveData.getValue()) {
-            isAlphabeticalInvertedOrderEnableMutableLiveData.setValue(false);
-        } else {
-            isAlphabeticalInvertedOrderEnableMutableLiveData.setValue(true);
-
-            isAlphabeticalOrderEnableMutableLiveData.setValue(false);
-            isOlderFirstEnableMutableLiveData.setValue(false);
-            isRecentFirstEnableMutableLiveData.setValue(false);
-        }
+        orderingMutableLiveData.setValue(Ordering.ALPHABETICAL_INVERTED);
     }
 
     public void onOlderFirstFilterClick() {
-        if (isOlderFirstEnableMutableLiveData.getValue()) {
-            isOlderFirstEnableMutableLiveData.setValue(false);
-        } else {
-            isOlderFirstEnableMutableLiveData.setValue(true);
-
-            isAlphabeticalOrderEnableMutableLiveData.setValue(false);
-            isAlphabeticalInvertedOrderEnableMutableLiveData.setValue(false);
-            isRecentFirstEnableMutableLiveData.setValue(false);
-        }
+        orderingMutableLiveData.setValue(Ordering.OLDER_FIRST);
     }
 
     public void onRecentFirstFilterClick() {
-        if (isRecentFirstEnableMutableLiveData.getValue()) {
-            isRecentFirstEnableMutableLiveData.setValue(false);
-        } else {
-            isRecentFirstEnableMutableLiveData.setValue(true);
-
-            isAlphabeticalOrderEnableMutableLiveData.setValue(false);
-            isAlphabeticalInvertedOrderEnableMutableLiveData.setValue(false);
-            isOlderFirstEnableMutableLiveData.setValue(false);
-        }
+        orderingMutableLiveData.setValue(Ordering.RECENT_FIRST);
     }
 
+    enum Ordering {
+        DEFAULT,
+        ALPHABETICAL,
+        ALPHABETICAL_INVERTED,
+        OLDER_FIRST,
+        RECENT_FIRST,
+    }
 }

@@ -1,11 +1,11 @@
 package com.monokoumacorporation.todoc.ui.create;
 
-import android.app.Application;
+import android.content.res.Resources;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.monokoumacorporation.todoc.R;
-import com.monokoumacorporation.todoc.data.dao.ProjectDao;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
@@ -30,7 +29,7 @@ public class CreateTaskViewModel extends ViewModel {
     @NonNull
     private final TaskRepository taskRepository;
     @NonNull
-    private final Application context;
+    private final Resources resources;
     @NonNull
     private final Executor mainExecutor;
     @NonNull
@@ -47,13 +46,14 @@ public class CreateTaskViewModel extends ViewModel {
 
     public CreateTaskViewModel(
         @NonNull TaskRepository taskRepository,
-        @NonNull Application context,
+        @NonNull Resources resources,
         @NonNull Executor mainExecutor,
         @NonNull Executor ioExecutor,
-        @NonNull ProjectRepository projectRepository) {
+        @NonNull ProjectRepository projectRepository
+    ) {
 
         this.taskRepository = taskRepository;
-        this.context = context;
+        this.resources = resources;
         this.mainExecutor = mainExecutor;
         this.ioExecutor = ioExecutor;
         this.projectRepository = projectRepository;
@@ -85,13 +85,13 @@ public class CreateTaskViewModel extends ViewModel {
                 if (selectedProjectId != null && project.getId() == selectedProjectId) {
                     item = new ProjectButtonViewStateItem(
                         project.getId(),
-                        project.getColor(),
+                        project.getColorInt(),
                         project.getName()
                     );
                 } else {
                     item = new ProjectButtonViewStateItem(
                         project.getId(),
-                        ContextCompat.getColor(context, R.color.charcoal),
+                        ResourcesCompat.getColor(resources, R.color.charcoal, null),
                         project.getName()
                     );
                 }
@@ -136,7 +136,7 @@ public class CreateTaskViewModel extends ViewModel {
             if (taskName == null || taskName.isEmpty()) {
                 taskViewStateMediatorLiveData.setValue(
                     new CreateTaskViewState(
-                        context.getString(R.string.task_name_error),
+                        resources.getString(R.string.task_name_error),
                         previous.getCheckboxErrorVisibility(),
                         previous.getProjectButtonViewStateItemList()
                     )

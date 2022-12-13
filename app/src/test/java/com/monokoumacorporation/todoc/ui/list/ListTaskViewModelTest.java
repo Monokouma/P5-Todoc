@@ -22,25 +22,25 @@ public class ListTaskViewModelTest {
     @Rule
     public final InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
-    private TaskRepository taskRepository;
     private Resources resources;
-    private Executor ioExecutor;
     private ProjectRepository projectRepository;
+    private TaskRepository taskRepository;
+    private Executor ioExecutor;
 
     private ListTaskViewModel listTaskViewModel;
 
     @Before
     public void setUp() {
-        taskRepository =  Mockito.mock(TaskRepository.class);
         resources = Mockito.mock(Resources.class);
-        ioExecutor = Mockito.spy(new TestExecutor());
         projectRepository = Mockito.mock(ProjectRepository.class);
+        taskRepository =  Mockito.mock(TaskRepository.class);
+        ioExecutor = Mockito.spy(new TestExecutor());
 
         listTaskViewModel = new ListTaskViewModel(
-            taskRepository,
             resources,
-            ioExecutor,
-            projectRepository
+            projectRepository,
+            taskRepository,
+            ioExecutor
         );
     }
 

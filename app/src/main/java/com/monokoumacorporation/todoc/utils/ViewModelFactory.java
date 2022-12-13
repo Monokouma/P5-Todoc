@@ -46,15 +46,15 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(ListTaskViewModel.class)) {
             return (T) new ListTaskViewModel(
-                taskRepository,
                 MainApplication.getInstance().getResources(),
-                ioExecutor,
-                projectRepository
+                projectRepository,
+                taskRepository,
+                ioExecutor
             );
         } else if (modelClass.isAssignableFrom(CreateTaskViewModel.class)) {
             return (T) new CreateTaskViewModel(
                 taskRepository,
-                MainApplication.getInstance(),
+                MainApplication.getInstance().getResources(),
                 mainExecutor,
                 ioExecutor,
                 projectRepository

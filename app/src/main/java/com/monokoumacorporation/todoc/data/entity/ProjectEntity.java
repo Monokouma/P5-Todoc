@@ -1,7 +1,6 @@
 package com.monokoumacorporation.todoc.data.entity;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.room.Entity;
@@ -20,25 +19,25 @@ public class ProjectEntity {
     private final String name;
 
     @ColorInt
-    private final int color;
+    private final int colorInt;
 
     @Ignore
     public ProjectEntity(
         @NonNull String name,
-        int color
+        @ColorInt int colorInt
     ) {
-        this(0, name, color);
+        this(0, name, colorInt);
     }
 
     @VisibleForTesting
     public ProjectEntity(
         long id,
         @NonNull String name,
-        int color
+        @ColorInt int colorInt
     ) {
         this.id = id;
         this.name = name;
-        this.color = color;
+        this.colorInt = colorInt;
     }
 
     public long getId() {
@@ -51,8 +50,8 @@ public class ProjectEntity {
     }
 
     @ColorInt
-    public int getColor() {
-        return color;
+    public int getColorInt() {
+        return colorInt;
     }
 
     @Override
@@ -60,12 +59,12 @@ public class ProjectEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProjectEntity project = (ProjectEntity) o;
-        return id == project.id && color == project.color && name.equals(project.name);
+        return id == project.id && colorInt == project.colorInt && name.equals(project.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, color);
+        return Objects.hash(id, name, colorInt);
     }
 
     @NonNull
@@ -74,7 +73,7 @@ public class ProjectEntity {
         return "Project{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", color=" + color +
+            ", color=" + colorInt +
             '}';
     }
 }
