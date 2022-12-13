@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.monokoumacorporation.todoc.data.database.TodocDatabase;
+import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 import com.monokoumacorporation.todoc.ui.create.CreateTaskViewModel;
 import com.monokoumacorporation.todoc.ui.list.ListTaskViewModel;
@@ -29,12 +30,14 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
 
     private final TodocDatabase todocDatabase;
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
     private final Executor mainExecutor = new MainThreadExecutor();
     private final Executor ioExecutor = Executors.newFixedThreadPool(4);
 
     private ViewModelFactory() {
         todocDatabase = TodocDatabase.getDatabase(MainApplication.getInstance().getApplicationContext(), ioExecutor);
         taskRepository = new TaskRepository(todocDatabase.getProjectDao(), todocDatabase.getTaskDao(), Clock.systemDefaultZone());
+        projectRepository = new ProjectRepository(todocDatabase.getProjectDao());
     }
 
     @SuppressWarnings("unchecked")
@@ -49,11 +52,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             );
         } else if (modelClass.isAssignableFrom(CreateTaskViewModel.class)) {
             return (T) new CreateTaskViewModel(
-                todocDatabase.getProjectDao(),
                 taskRepository,
                 MainApplication.getInstance(),
                 mainExecutor,
-                ioExecutor
+                ioExecutor,
+                projectRepository
             );
         }
         throw new IllegalArgumentException("Unknow ViewModel");

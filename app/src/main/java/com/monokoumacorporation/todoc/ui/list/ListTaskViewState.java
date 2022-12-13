@@ -1,5 +1,6 @@
 package com.monokoumacorporation.todoc.ui.list;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import java.util.List;
@@ -10,8 +11,11 @@ public class ListTaskViewState {
     @NonNull
     private final List<TaskViewStateItems> listActivityViewStateItemsList;
 
-    public ListTaskViewState(@NonNull List<TaskViewStateItems> listActivityViewStateItemsList) {
+    private final int emptyListMessageVisibility;
+
+    public ListTaskViewState(@NonNull List<TaskViewStateItems> listActivityViewStateItemsList, int emptyListMessageVisibility) {
         this.listActivityViewStateItemsList = listActivityViewStateItemsList;
+        this.emptyListMessageVisibility = emptyListMessageVisibility;
     }
 
     @NonNull
@@ -19,17 +23,21 @@ public class ListTaskViewState {
         return listActivityViewStateItemsList;
     }
 
+    public int getEmptyListMessageVisibility() {
+        return emptyListMessageVisibility;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListTaskViewState that = (ListTaskViewState) o;
-        return listActivityViewStateItemsList.equals(that.listActivityViewStateItemsList);
+        return emptyListMessageVisibility == that.emptyListMessageVisibility && listActivityViewStateItemsList.equals(that.listActivityViewStateItemsList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(listActivityViewStateItemsList);
+        return Objects.hash(listActivityViewStateItemsList, emptyListMessageVisibility);
     }
 
     @NonNull
@@ -37,6 +45,7 @@ public class ListTaskViewState {
     public String toString() {
         return "ListTaskViewState{" +
             "listActivityViewStateItemsList=" + listActivityViewStateItemsList +
+            ", emptyListMessageVisibility=" + emptyListMessageVisibility +
             '}';
     }
 }

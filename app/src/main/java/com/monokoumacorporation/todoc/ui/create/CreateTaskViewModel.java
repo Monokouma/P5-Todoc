@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel;
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.dao.ProjectDao;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
+import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
 import com.monokoumacorporation.todoc.ui.create.button.ProjectButtonViewStateItem;
 import com.monokoumacorporation.todoc.utils.SingleLiveEvent;
@@ -43,18 +44,18 @@ public class CreateTaskViewModel extends ViewModel {
     private String taskName;
 
     public CreateTaskViewModel(
-        @NonNull ProjectDao projectDao, // TODO MONO Fix petite triche
         @NonNull TaskRepository taskRepository,
         @NonNull Application context,
         @NonNull Executor mainExecutor,
-        @NonNull Executor ioExecutor
-    ) {
+        @NonNull Executor ioExecutor,
+        ProjectRepository projectRepository) {
+
         this.taskRepository = taskRepository;
         this.context = context;
         this.mainExecutor = mainExecutor;
         this.ioExecutor = ioExecutor;
 
-        LiveData<List<ProjectEntity>> projectsLiveData = projectDao.getAll();
+        LiveData<List<ProjectEntity>> projectsLiveData = projectRepository.getProjectEntityList();
 
         taskViewStateMediatorLiveData.addSource(selectedProjectIdMutableLiveData, new Observer<Long>() {
             @Override

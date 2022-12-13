@@ -2,6 +2,8 @@ package com.monokoumacorporation.todoc.ui.list;
 
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -165,19 +167,27 @@ public class ListTaskViewModel extends ViewModel {
             );
         }
 
-
-
-        listTaskViewStateMediatorLiveData.setValue(
-            new ListTaskViewState(
-                getSortedTaskViewStateItems(
-                    taskViewStateItemsList,
-                    isAlphabeticalOrderEnable,
-                    isAlphabeticalInvertedOrderEnable,
-                    isOlderFirstEnable,
-                    isRecentFirstEnable
+        if (taskViewStateItemsList.isEmpty()) {
+            listTaskViewStateMediatorLiveData.setValue(
+                new ListTaskViewState(
+                    new ArrayList<>(),
+                    View.VISIBLE
                 )
-            )
-        );
+            );
+        } else {
+            listTaskViewStateMediatorLiveData.setValue(
+                new ListTaskViewState(
+                    getSortedTaskViewStateItems(
+                        taskViewStateItemsList,
+                        isAlphabeticalOrderEnable,
+                        isAlphabeticalInvertedOrderEnable,
+                        isOlderFirstEnable,
+                        isRecentFirstEnable
+                    ),
+                    View.GONE
+                )
+            );
+        }
     }
 
     @SuppressLint("NewApi")

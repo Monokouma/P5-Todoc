@@ -3,17 +3,22 @@ package com.monokoumacorporation.todoc.ui.list;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.ui.create.CreateTaskActivity;
@@ -32,16 +37,20 @@ public class ListTaskActivity extends AppCompatActivity implements OnDeleteListe
         setSupportActionBar(toolbar);
         RecyclerView taskRV = findViewById(R.id.list_task_act_no_task_recycler_view);
         FloatingActionButton floatingActionButton = findViewById(R.id.list_task_act_fab);
+        ConstraintLayout noTaskMessageLayout = findViewById(R.id.list_task_act_no_task_layout);
+        ImageView noTaskImage = findViewById(R.id.list_task_act_no_task_image);
         floatingActionButton.setOnClickListener(view -> startActivity(CreateTaskActivity.navigate(this)));
-
+        Glide.with(this).load(R.drawable.empty_list_gif).into(noTaskImage);
         taskRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         final TaskListAdapter taskListAdapter = new TaskListAdapter(this);
         taskRV.setAdapter(taskListAdapter);
 
         listTaskViewModel.getTaskListMutableLiveData().observe(this, new Observer<ListTaskViewState>() {
+            @SuppressLint("WrongConstant")
             @Override
             public void onChanged(ListTaskViewState listTaskViewState) {
                 taskListAdapter.submitList(listTaskViewState.getListActivityViewStateItemsList());
+                noTaskMessageLayout.setVisibility(listTaskViewState.getEmptyListMessageVisibility());
             }
         });
     }

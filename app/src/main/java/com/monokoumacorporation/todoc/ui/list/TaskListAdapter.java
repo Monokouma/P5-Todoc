@@ -66,15 +66,14 @@ public class TaskListAdapter extends ListAdapter<TaskViewStateItems, TaskListAda
 
     private static class TaskListAdapterDiffCallBack extends DiffUtil.ItemCallback<TaskViewStateItems> {
 
-        // TODO MONO Use these 2 to handle good UX
         @Override
         public boolean areItemsTheSame(@NonNull TaskViewStateItems oldItem, @NonNull TaskViewStateItems newItem) {
-            return false;
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull TaskViewStateItems oldItem, @NonNull TaskViewStateItems newItem) {
-            return false;
+            return oldItem.equals(newItem);
         }
     }
 

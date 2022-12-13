@@ -28,21 +28,41 @@
             />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/list_task_act_no_task_tv"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/list_task_act_no_task_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_task"
-        android:textColor="@color/black"
-        android:drawableTop="@drawable/ic_work_off"
-        android:textSize="24sp"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        >
+
+        <ImageView
+            android:id="@+id/list_task_act_no_task_image"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            tools:src="@drawable/empty_list_gif"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/list_task_act_no_task_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/no_task"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/list_task_act_no_task_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_task_act_no_task_recycler_view"
