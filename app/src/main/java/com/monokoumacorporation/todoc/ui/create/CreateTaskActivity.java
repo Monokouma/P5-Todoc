@@ -21,6 +21,9 @@ import com.monokoumacorporation.todoc.ui.create.button.OnProjectButton;
 import com.monokoumacorporation.todoc.ui.create.button.ProjectButtonAdapter;
 import com.monokoumacorporation.todoc.utils.ViewModelFactory;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CreateTaskActivity extends AppCompatActivity implements OnProjectButton {
     private CreateTaskViewModel createTaskViewModel;
 

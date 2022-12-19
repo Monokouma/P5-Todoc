@@ -23,7 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.inject.Inject;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class CreateTaskViewModel extends ViewModel {
 
     @NonNull
@@ -44,6 +48,7 @@ public class CreateTaskViewModel extends ViewModel {
 
     private String taskName;
 
+    @Inject
     public CreateTaskViewModel(
         @NonNull TaskRepository taskRepository,
         @NonNull Resources resources,

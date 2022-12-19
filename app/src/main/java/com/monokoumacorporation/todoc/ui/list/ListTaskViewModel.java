@@ -21,7 +21,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.inject.Inject;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class ListTaskViewModel extends ViewModel {
 
     private final MediatorLiveData<ListTaskViewState> listTaskViewStateMediatorLiveData = new MediatorLiveData<>();
@@ -32,6 +36,7 @@ public class ListTaskViewModel extends ViewModel {
     private final TaskRepository taskRepository;
     private final Executor ioExecutor;
 
+    @Inject
     public ListTaskViewModel(Resources resources, ProjectRepository projectRepository, TaskRepository taskRepository, Executor ioExecutor) {
         this.resources = resources;
         this.taskRepository = taskRepository;

@@ -24,6 +24,9 @@ import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.ui.create.CreateTaskActivity;
 import com.monokoumacorporation.todoc.utils.ViewModelFactory;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ListTaskActivity extends AppCompatActivity implements OnDeleteListener {
 
     private ListTaskViewModel listTaskViewModel;

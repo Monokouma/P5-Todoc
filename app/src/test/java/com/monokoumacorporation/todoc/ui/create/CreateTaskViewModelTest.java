@@ -1,8 +1,10 @@
 package com.monokoumacorporation.todoc.ui.create;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import android.content.res.Resources;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
@@ -68,6 +70,22 @@ public class CreateTaskViewModelTest {
         assertEquals(getDefaultCreateTaskViewState(), result);
     }
 
+    @Test
+    public void all_field_filled_should_return_no_error() {
+        //Given
+        createTaskViewModel.onTaskTextChange("foo");
+        createTaskViewModel.onProjectButtonClicked(2);
+        createTaskViewModel.onAddButtonClicked();
+
+        CreateTaskViewState result = LiveDataTestUtils.getValueForTesting(createTaskViewModel.getTaskViewStateMediatorLiveData());
+
+        //Then
+        assertEquals(View.GONE, result.getCheckboxErrorVisibility());
+        assertNull(result.getTaskInputErrorMessage());
+    }
+
+
+
     // region IN
     @NonNull
     private List<ProjectEntity> getDefaultProjectEntities() {
@@ -79,12 +97,13 @@ public class CreateTaskViewModelTest {
 
         return projectEntities;
     }
-    // endregion IN
 
 
     // region OUT
+
+    // endregion IN
     private CreateTaskViewState getDefaultCreateTaskViewState() {
-        return Mockito.mock(CreateTaskViewState.class); // TODO MONO
+        return createTaskViewModel.getTaskViewStateMediatorLiveData().getValue();
     }
     // endregion OUT
 }

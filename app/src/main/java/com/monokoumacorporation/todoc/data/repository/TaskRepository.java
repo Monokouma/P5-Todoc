@@ -14,11 +14,22 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
+
+
+@InstallIn(SingletonComponent.class)
+@Module
 public class TaskRepository {
 
     private final TaskDao taskDao;
     private final Clock clock;
 
+    @Inject
     public TaskRepository(TaskDao taskDao, Clock clock) {
         this.taskDao = taskDao;
         this.clock = clock;
