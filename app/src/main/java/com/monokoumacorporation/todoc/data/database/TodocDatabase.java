@@ -1,6 +1,5 @@
 package com.monokoumacorporation.todoc.data.database;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
@@ -19,43 +18,25 @@ import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
 import java.util.concurrent.Executor;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.Provider;
 
-import dagger.Binds;
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.android.internal.managers.ApplicationComponentManager;
-import dagger.hilt.components.SingletonComponent;
-
-@InstallIn(SingletonComponent.class)
-@Module
-@Database(entities = {TaskEntity.class, ProjectEntity.class}, version = 1, exportSchema = false)
+@Database(
+    entities = {TaskEntity.class, ProjectEntity.class},
+    version = 1,
+    exportSchema = false
+)
 public abstract class TodocDatabase extends RoomDatabase {
 
-    @Binds
     public abstract TaskDao getTaskDao();
-    @Binds
-    public abstract ProjectDao getProjectDao();
 
-    private static volatile TodocDatabase INSTANCE;
+    public abstract ProjectDao getProjectDao();
 
     private final static String DATABASE_NAME = "bla";
 
-    public static TodocDatabase getDatabase(@NonNull Context context, @NonNull Executor ioExecutor) {
-        if (INSTANCE == null) {
-            synchronized (TodocDatabase.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = create(context, ioExecutor);
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-    private static TodocDatabase create(
+    public static TodocDatabase create(
         @NonNull Context context,
-        @NonNull Executor ioExecutor
+        @NonNull Executor ioExecutor,
+        @NonNull Provider<ProjectDao> provider
     ) {
         Builder<TodocDatabase> builder = Room.databaseBuilder(
             context.getApplicationContext(),
@@ -68,7 +49,7 @@ public abstract class TodocDatabase extends RoomDatabase {
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
                 ioExecutor.execute(() -> {
-                    ProjectDao projectDao = TodocDatabase.getDatabase(context, ioExecutor).getProjectDao();
+                    ProjectDao projectDao = provider.get();
                     Log.i("Monokouma", "HERE");
                     projectDao.insert(
                         new ProjectEntity(

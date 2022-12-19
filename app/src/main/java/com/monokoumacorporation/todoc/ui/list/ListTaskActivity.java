@@ -11,18 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.ui.create.CreateTaskActivity;
-import com.monokoumacorporation.todoc.utils.ViewModelFactory;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,7 +32,7 @@ public class ListTaskActivity extends AppCompatActivity implements OnDeleteListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_task);
-        listTaskViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(ListTaskViewModel.class);
+        listTaskViewModel = new ViewModelProvider(this).get(ListTaskViewModel.class);
         Toolbar toolbar = findViewById(R.id.list_task_act_toolbar);
         setSupportActionBar(toolbar);
         RecyclerView taskRV = findViewById(R.id.list_task_act_no_task_recycler_view);

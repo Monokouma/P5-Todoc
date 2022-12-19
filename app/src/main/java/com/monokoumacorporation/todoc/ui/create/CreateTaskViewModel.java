@@ -13,6 +13,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.monokoumacorporation.todoc.R;
+import com.monokoumacorporation.todoc.data.di.IoExecutor;
+import com.monokoumacorporation.todoc.data.di.MainExecutor;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
@@ -52,8 +54,8 @@ public class CreateTaskViewModel extends ViewModel {
     public CreateTaskViewModel(
         @NonNull TaskRepository taskRepository,
         @NonNull Resources resources,
-        @NonNull Executor mainExecutor,
-        @NonNull Executor ioExecutor,
+        @NonNull @MainExecutor Executor mainExecutor,
+        @NonNull @IoExecutor Executor ioExecutor,
         @NonNull ProjectRepository projectRepository
     ) {
 

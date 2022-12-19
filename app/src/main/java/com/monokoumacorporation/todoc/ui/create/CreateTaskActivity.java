@@ -19,7 +19,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.ui.create.button.OnProjectButton;
 import com.monokoumacorporation.todoc.ui.create.button.ProjectButtonAdapter;
-import com.monokoumacorporation.todoc.utils.ViewModelFactory;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -37,7 +36,7 @@ public class CreateTaskActivity extends AppCompatActivity implements OnProjectBu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
-        createTaskViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(CreateTaskViewModel.class);
+        createTaskViewModel = new ViewModelProvider(this).get(CreateTaskViewModel.class);
         Toolbar toolbar = findViewById(R.id.create_task_act_toolbar);
         toolbar.setNavigationOnClickListener(view -> finish());
         TextInputEditText taskTIET = findViewById(R.id.create_task_act_task_tiet);

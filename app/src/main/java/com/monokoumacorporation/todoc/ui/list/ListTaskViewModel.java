@@ -10,6 +10,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.monokoumacorporation.todoc.data.di.IoExecutor;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
@@ -37,7 +38,12 @@ public class ListTaskViewModel extends ViewModel {
     private final Executor ioExecutor;
 
     @Inject
-    public ListTaskViewModel(Resources resources, ProjectRepository projectRepository, TaskRepository taskRepository, Executor ioExecutor) {
+    public ListTaskViewModel(
+        @NonNull Resources resources,
+        @NonNull ProjectRepository projectRepository,
+        @NonNull TaskRepository taskRepository,
+        @NonNull @IoExecutor Executor ioExecutor
+    ) {
         this.resources = resources;
         this.taskRepository = taskRepository;
         this.ioExecutor = ioExecutor;
