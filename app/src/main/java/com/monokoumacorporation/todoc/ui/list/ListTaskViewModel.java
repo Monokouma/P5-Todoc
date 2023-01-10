@@ -11,7 +11,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.monokoumacorporation.todoc.data.di.IoExecutor;
-import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.ProjectWithTasksEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
@@ -170,10 +169,6 @@ public class ListTaskViewModel extends ViewModel {
 
     public void onRecentFirstFilterClick() {
         orderingMutableLiveData.setValue(Ordering.RECENT_FIRST);
-    }
-
-    public void deleteAll() {
-        ioExecutor.execute(taskRepository::deleteAll);
     }
 
     enum Ordering {

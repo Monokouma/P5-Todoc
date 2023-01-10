@@ -1,6 +1,5 @@
 package com.monokoumacorporation.todoc.ui.list;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import java.util.List;

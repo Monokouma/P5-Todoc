@@ -87,17 +87,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/list_task_act_delete_all_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_baseline_delete_24"
-        app:tint="@color/white"
-        app:rippleColor="@color/white"
-        android:backgroundTint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/list_task_act_fab"
-        />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

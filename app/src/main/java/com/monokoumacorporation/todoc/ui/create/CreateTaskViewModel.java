@@ -45,8 +45,6 @@ public class CreateTaskViewModel extends ViewModel {
     private final Executor mainExecutor;
     @NonNull
     private final Executor ioExecutor;
-    @NonNull
-    private final ProjectRepository projectRepository;
 
     private final MediatorLiveData<CreateTaskViewState> taskViewStateMediatorLiveData = new MediatorLiveData<>();
     private final MutableLiveData<Long> selectedProjectIdMutableLiveData = new MutableLiveData<>(null);
@@ -68,8 +66,6 @@ public class CreateTaskViewModel extends ViewModel {
         this.resources = resources;
         this.mainExecutor = mainExecutor;
         this.ioExecutor = ioExecutor;
-        this.projectRepository = projectRepository;
-
 
         LiveData<List<ProjectEntity>> projectsLiveData = projectRepository.getProjectEntityList();
 

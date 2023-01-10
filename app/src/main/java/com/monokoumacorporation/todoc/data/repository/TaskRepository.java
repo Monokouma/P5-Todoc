@@ -4,23 +4,14 @@ import androidx.annotation.MainThread;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 
-import com.monokoumacorporation.todoc.data.dao.ProjectDao;
 import com.monokoumacorporation.todoc.data.dao.TaskDao;
-import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.ProjectWithTasksEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
 
 public class TaskRepository {
 
@@ -51,11 +42,6 @@ public class TaskRepository {
     @WorkerThread
     public void deleteTask(long taskId) {
         taskDao.delete(taskId);
-    }
-
-
-    public void deleteAll() {
-        taskDao.nukeTable();
     }
 
     @MainThread

@@ -1,7 +1,6 @@
 package com.monokoumacorporation.todoc.ui.create.button;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 
 import java.util.Objects;

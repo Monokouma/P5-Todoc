@@ -3,11 +3,9 @@ package com.monokoumacorporation.todoc.list;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static com.monokoumacorporation.todoc.utils.ViewAssertions.hasRecyclerViewItemCount;
 import static com.monokoumacorporation.todoc.utils.ViewAssertions.onRecyclerViewItem;
 
@@ -22,7 +20,6 @@ import com.monokoumacorporation.todoc.ui.list.ListTaskActivity;
 import com.monokoumacorporation.todoc.utils.CreateTaskUtils;
 import com.monokoumacorporation.todoc.utils.MyViewAction;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,25 +36,16 @@ public class ListTaskActivityTest {
     private static final String THIRD_TASK_NAME = "THIRD_TASK_NAME";
     private static final Integer THIRD_PROJECT_BUTTON_ID = 2;
 
-    private ListTaskActivity listTaskActivity;
-
     @Before
     public void setUp() {
-        ActivityScenario<ListTaskActivity> activityScenario = ActivityScenario.launch(ListTaskActivity.class);
-        activityScenario.onActivity(activity -> listTaskActivity = activity);
-    }
-
-    @After
-    public void tearDown() {
-        listTaskActivity = null;
+        ActivityScenario.launch(ListTaskActivity.class);
     }
 
     @Test
     public void create_multiple_task_with_filtering() throws InterruptedException {
-        //Delete all task
-        nukeTable();
         //Insert 3 task
         insertTasks();
+
         //Verify initial task insertion
         checkItemInsertion();
 
@@ -105,164 +93,164 @@ public class ListTaskActivityTest {
 
     private void checkNoTaskLayoutVisibility() {
         onView(
-                withId(R.id.list_task_act_no_task_layout)
+            withId(R.id.list_task_act_no_task_layout)
         ).check(
-                matches(
-                        withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
-                )
+            matches(
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
+            )
         );
     }
 
     private void checkRecyclerViewHasNoItem() {
         onView(withId(R.id.list_task_act_recycler_view))
-                .check(hasRecyclerViewItemCount(0));
+            .check(hasRecyclerViewItemCount(0));
     }
 
     private void deleteTask() {
         onView(
-                withId(R.id.list_task_act_recycler_view)
+            withId(R.id.list_task_act_recycler_view)
         ).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.task_list_item_delete_image))
+            RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.task_list_item_delete_image))
         );
 
     }
 
     private void checkNewestFirstSort() {
         onView(
-                withId(R.id.list_task_act_recycler_view)
+            withId(R.id.list_task_act_recycler_view)
         )
-                .check(hasRecyclerViewItemCount(3))
-                .check(
-                        onRecyclerViewItem(
-                                2,
-                                R.id.task_list_item_task_name_tv,
-                                withText(FIRST_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                1,
-                                R.id.task_list_item_task_name_tv,
-                                withText(SECOND_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                0,
-                                R.id.task_list_item_task_name_tv,
-                                withText(THIRD_TASK_NAME)
-                        )
-                );
+            .check(hasRecyclerViewItemCount(3))
+            .check(
+                onRecyclerViewItem(
+                    2,
+                    R.id.task_list_item_task_name_tv,
+                    withText(FIRST_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    1,
+                    R.id.task_list_item_task_name_tv,
+                    withText(SECOND_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    0,
+                    R.id.task_list_item_task_name_tv,
+                    withText(THIRD_TASK_NAME)
+                )
+            );
     }
 
     private void checkOlderFirstSort() {
         onView(
-                withId(R.id.list_task_act_recycler_view)
+            withId(R.id.list_task_act_recycler_view)
         )
-                .check(hasRecyclerViewItemCount(3))
-                .check(
-                        onRecyclerViewItem(
-                                0,
-                                R.id.task_list_item_task_name_tv,
-                                withText(FIRST_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                1,
-                                R.id.task_list_item_task_name_tv,
-                                withText(SECOND_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                2,
-                                R.id.task_list_item_task_name_tv,
-                                withText(THIRD_TASK_NAME)
-                        )
-                );
+            .check(hasRecyclerViewItemCount(3))
+            .check(
+                onRecyclerViewItem(
+                    0,
+                    R.id.task_list_item_task_name_tv,
+                    withText(FIRST_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    1,
+                    R.id.task_list_item_task_name_tv,
+                    withText(SECOND_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    2,
+                    R.id.task_list_item_task_name_tv,
+                    withText(THIRD_TASK_NAME)
+                )
+            );
     }
 
     private void checkAlphabeticalSort() {
         onView(
-                withId(R.id.list_task_act_recycler_view)
+            withId(R.id.list_task_act_recycler_view)
         )
-                .check(hasRecyclerViewItemCount(3))
-                .check(
-                        onRecyclerViewItem(
-                                0,
-                                R.id.task_list_item_task_name_tv,
-                                withText(FIRST_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                1,
-                                R.id.task_list_item_task_name_tv,
-                                withText(SECOND_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                2,
-                                R.id.task_list_item_task_name_tv,
-                                withText(THIRD_TASK_NAME)
-                        )
-                );
+            .check(hasRecyclerViewItemCount(3))
+            .check(
+                onRecyclerViewItem(
+                    0,
+                    R.id.task_list_item_task_name_tv,
+                    withText(FIRST_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    1,
+                    R.id.task_list_item_task_name_tv,
+                    withText(SECOND_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    2,
+                    R.id.task_list_item_task_name_tv,
+                    withText(THIRD_TASK_NAME)
+                )
+            );
     }
 
     private void openFilterMenu() {
         onView(
-                withId(R.id.action_filter)
+            withId(R.id.action_filter)
         ).perform(
-                click()
+            click()
         );
     }
 
     private void checkInvertedAlphabeticalSort() {
         onView(
-                withId(R.id.list_task_act_recycler_view)
+            withId(R.id.list_task_act_recycler_view)
         )
-                .check(hasRecyclerViewItemCount(3))
-                .check(
-                        onRecyclerViewItem(
-                                2,
-                                R.id.task_list_item_task_name_tv,
-                                withText(FIRST_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                1,
-                                R.id.task_list_item_task_name_tv,
-                                withText(SECOND_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                0,
-                                R.id.task_list_item_task_name_tv,
-                                withText(THIRD_TASK_NAME)
-                        )
-                );
+            .check(hasRecyclerViewItemCount(3))
+            .check(
+                onRecyclerViewItem(
+                    2,
+                    R.id.task_list_item_task_name_tv,
+                    withText(FIRST_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    1,
+                    R.id.task_list_item_task_name_tv,
+                    withText(SECOND_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    0,
+                    R.id.task_list_item_task_name_tv,
+                    withText(THIRD_TASK_NAME)
+                )
+            );
     }
 
     private void checkItemInsertion() {
         onView(
-                withId(R.id.list_task_act_recycler_view)
+            withId(R.id.list_task_act_recycler_view)
         )
-                .check(hasRecyclerViewItemCount(3))
-                .check(
-                        onRecyclerViewItem(
-                                0,
-                                R.id.task_list_item_task_name_tv,
-                                withText(FIRST_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                1,
-                                R.id.task_list_item_task_name_tv,
-                                withText(SECOND_TASK_NAME)
-                        )
-                ).check(
-                        onRecyclerViewItem(
-                                2,
-                                R.id.task_list_item_task_name_tv,
-                                withText(THIRD_TASK_NAME)
-                        )
-                );
+            .check(hasRecyclerViewItemCount(3))
+            .check(
+                onRecyclerViewItem(
+                    0,
+                    R.id.task_list_item_task_name_tv,
+                    withText(FIRST_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    1,
+                    R.id.task_list_item_task_name_tv,
+                    withText(SECOND_TASK_NAME)
+                )
+            ).check(
+                onRecyclerViewItem(
+                    2,
+                    R.id.task_list_item_task_name_tv,
+                    withText(THIRD_TASK_NAME)
+                )
+            );
     }
 
     private void insertTasks() {
@@ -274,10 +262,6 @@ public class ListTaskActivityTest {
 
         onView(withId(R.id.list_task_act_fab)).perform(click());
         CreateTaskUtils.createTask(THIRD_TASK_NAME, THIRD_PROJECT_BUTTON_ID);
-    }
-
-    private void nukeTable() {
-        onView(withId(R.id.list_task_act_delete_all_fab)).perform(click());
     }
 }
 

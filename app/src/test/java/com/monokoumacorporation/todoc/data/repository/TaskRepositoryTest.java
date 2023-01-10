@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.monokoumacorporation.todoc.data.dao.ProjectDao;
 import com.monokoumacorporation.todoc.data.dao.TaskDao;
-import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.utils.MainApplication;
 

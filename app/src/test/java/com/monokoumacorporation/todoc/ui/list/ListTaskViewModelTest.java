@@ -1,7 +1,6 @@
 package com.monokoumacorporation.todoc.ui.list;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 
 import android.content.res.Resources;
 import android.view.View;
@@ -17,15 +16,11 @@ import com.monokoumacorporation.todoc.data.entity.ProjectWithTasksEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
-import com.monokoumacorporation.todoc.ui.create.CreateTaskViewState;
 import com.monokoumacorporation.todoc.utils.TestExecutor;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
 import java.time.Clock;
