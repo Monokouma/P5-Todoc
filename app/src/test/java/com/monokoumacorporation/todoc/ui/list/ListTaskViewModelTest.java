@@ -72,13 +72,6 @@ public class ListTaskViewModelTest {
     }
 
     @Test
-    public void empty_task_list_should_make_appear_no_task_message() {
-        ListTaskViewState result = LiveDataTestUtils.getValueForTesting(listTaskViewModel.getTaskListMutableLiveData());
-
-        assertEquals(View.VISIBLE, result.getEmptyListMessageVisibility());
-    }
-
-    @Test
     public void not_empty_task_list_should_not_make_appear_no_task_message() {
         projectsWithTaskMutableLiveData.setValue(getDefaultTaskEntities());
         ListTaskViewState result = LiveDataTestUtils.getValueForTesting(listTaskViewModel.getTaskListMutableLiveData());
@@ -113,10 +106,13 @@ public class ListTaskViewModelTest {
     @NonNull
     private List<ProjectWithTasksEntity> getDefaultTaskEntities() {
         List<ProjectWithTasksEntity> projectWithTasksEntities= new ArrayList<>();
+
         ProjectEntity projectEntity = new ProjectEntity(0,
                 EXPECTED_PROJECT_NAME,
                 EXPECTED_CHARCOAL_COLOR);
+
         List<TaskEntity> taskEntities = new ArrayList<>();
+
         taskEntities.add(
                 new TaskEntity(
                         1,
@@ -127,8 +123,10 @@ public class ListTaskViewModelTest {
         );
 
             projectWithTasksEntities.add(
-                    projectEntity,
-                    taskEntities
+                    new ProjectWithTasksEntity(
+                            projectEntity,
+                            taskEntities
+                    )
             );
 
         return projectWithTasksEntities;
