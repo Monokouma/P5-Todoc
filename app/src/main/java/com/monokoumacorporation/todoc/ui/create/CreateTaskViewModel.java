@@ -27,9 +27,14 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.components.ViewModelComponent;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
+@Module
+@InstallIn(ViewModelComponent.class)
 public class CreateTaskViewModel extends ViewModel {
 
     @NonNull

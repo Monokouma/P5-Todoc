@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.monokoumacorporation.todoc.data.di.IoExecutor;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
+import com.monokoumacorporation.todoc.data.entity.ProjectWithTasksEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
@@ -24,9 +25,14 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.components.ViewModelComponent;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
+@Module
+@InstallIn(ViewModelComponent.class)
 public class ListTaskViewModel extends ViewModel {
 
     private final MediatorLiveData<ListTaskViewState> listTaskViewStateMediatorLiveData = new MediatorLiveData<>();
@@ -48,63 +54,48 @@ public class ListTaskViewModel extends ViewModel {
         this.taskRepository = taskRepository;
         this.ioExecutor = ioExecutor;
 
-        LiveData<List<TaskEntity>> taskListLiveData = taskRepository.getTaskListLiveData();
-        LiveData<List<ProjectEntity>> projectListLiveData = projectRepository.getProjectEntityList();
+        LiveData<List<ProjectWithTasksEntity>> projectWithTaskLiveData = taskRepository.getAllProjectWithTaskLiveData();
 
         listTaskViewStateMediatorLiveData.addSource(
-            taskListLiveData,
-            tasks -> combine(
-                tasks,
-                orderingMutableLiveData.getValue(),
-                projectListLiveData.getValue()
+            projectWithTaskLiveData,
+            projectWithTasksEntities -> combine(
+                    projectWithTasksEntities,
+                    orderingMutableLiveData.getValue()
             )
         );
 
         listTaskViewStateMediatorLiveData.addSource(
             orderingMutableLiveData,
             ordering -> combine(
-                taskListLiveData.getValue(),
-                ordering,
-                projectListLiveData.getValue()
+                    projectWithTaskLiveData.getValue(),
+                    ordering
             )
         );
 
-        listTaskViewStateMediatorLiveData.addSource(
-            projectListLiveData,
-            projectEntities -> combine(
-                taskListLiveData.getValue(),
-                orderingMutableLiveData.getValue(),
-                projectEntities
-            )
-        );
     }
 
     private void combine(
-        @Nullable List<TaskEntity> tasks,
-        @Nullable Ordering ordering,
-        @Nullable List<ProjectEntity> projects
+            @NonNull List<ProjectWithTasksEntity> projectsWithTaskEntity,
+            @Nullable Ordering ordering
     ) {
 
-        if (tasks == null || ordering == null || projects == null) {
+        if (projectsWithTaskEntity == null || ordering == null) {
             return;
         }
 
         List<TaskViewStateItems> taskViewStateItemsList = new ArrayList<>();
 
-        for (TaskEntity task : tasks) {
-            for (ProjectEntity project : projects) {
-                if (task.getProjectId() == project.getId()) {
-                    String projectName = project.getName();
-                    int projectColor = project.getColorInt();
-
+        for (ProjectWithTasksEntity projectWithTasksEntities : projectsWithTaskEntity) {
+            for (TaskEntity taskEntities : projectWithTasksEntities.getTaskEntities()) {
+                if (taskEntities.getProjectId() == projectWithTasksEntities.getProject().getId()) {
                     taskViewStateItemsList.add(
-                        new TaskViewStateItems(
-                            task.getName(),
-                            projectName,
-                            projectColor,
-                            task.getId(),
-                            task.getCreationTimestamp()
-                        )
+                            new TaskViewStateItems(
+                                 taskEntities.getName(),
+                                 projectWithTasksEntities.getProject().getName(),
+                                 projectWithTasksEntities.getProject().getColorInt(),
+                                 taskEntities.getId(),
+                                 taskEntities.getCreationTimestamp()
+                            )
                     );
                 }
             }
@@ -179,6 +170,10 @@ public class ListTaskViewModel extends ViewModel {
 
     public void onRecentFirstFilterClick() {
         orderingMutableLiveData.setValue(Ordering.RECENT_FIRST);
+    }
+
+    public void deleteAll() {
+        ioExecutor.execute(taskRepository::deleteAll);
     }
 
     enum Ordering {

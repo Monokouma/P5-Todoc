@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.monokoumacorporation.todoc.data.dao.ProjectDao;
 import com.monokoumacorporation.todoc.data.dao.TaskDao;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
+import com.monokoumacorporation.todoc.data.entity.ProjectWithTasksEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
 import java.time.Clock;
@@ -53,4 +54,12 @@ public class TaskRepository {
     }
 
 
+    public void deleteAll() {
+        taskDao.nukeTable();
+    }
+
+    @MainThread
+    public LiveData<List<ProjectWithTasksEntity>> getAllProjectWithTaskLiveData() {
+        return taskDao.getAllProjectWithTasks();
+    }
 }

@@ -11,7 +11,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
 import com.monokoumacorporation.todoc.LiveDataTestUtils;
+import com.monokoumacorporation.todoc.R;
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
+import com.monokoumacorporation.todoc.data.entity.ProjectWithTasksEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 import com.monokoumacorporation.todoc.data.repository.ProjectRepository;
 import com.monokoumacorporation.todoc.data.repository.TaskRepository;
@@ -33,6 +35,7 @@ import java.util.concurrent.Executor;
 
 public class ListTaskViewModelTest {
     private static final int EXPECTED_CHARCOAL_COLOR = 0x353A47;
+    private static final String EXPECTED_PROJECT_NAME = "EXPECTED_PROJECT_NAME";
 
     @Rule
     public final InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -42,19 +45,16 @@ public class ListTaskViewModelTest {
     private final TaskRepository taskRepository = Mockito.mock(TaskRepository.class);
     private final Executor ioExecutor = Mockito.spy(new TestExecutor());
     private final MutableLiveData<ListTaskViewModel.Ordering> orderingMutableLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<ProjectEntity>> projectsMutableLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<TaskEntity>> taskMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<ProjectWithTasksEntity>> projectsWithTaskMutableLiveData = new MutableLiveData<>();
     private final Clock clock = Mockito.mock(Clock.class);
 
     private ListTaskViewModel listTaskViewModel;
 
     @Before
     public void setUp() {
-        Mockito.doReturn(projectsMutableLiveData).when(projectRepository).getProjectEntityList();
-        Mockito.doReturn(taskMutableLiveData).when(taskRepository).getTaskListLiveData();
+        Mockito.doReturn(projectsWithTaskMutableLiveData).when(taskRepository).getAllProjectWithTaskLiveData();
+        Mockito.doReturn(EXPECTED_PROJECT_NAME).when(resources).getString(R.string.projet_tartampion);
         orderingMutableLiveData.setValue(ListTaskViewModel.Ordering.DEFAULT);
-        projectsMutableLiveData.setValue(getDefaultProjectEntities());
-        taskMutableLiveData.setValue(new ArrayList<>());
 
         listTaskViewModel = new ListTaskViewModel(
             resources,
@@ -80,7 +80,7 @@ public class ListTaskViewModelTest {
 
     @Test
     public void not_empty_task_list_should_not_make_appear_no_task_message() {
-        taskMutableLiveData.setValue(getDefaultTaskEntities());
+        projectsWithTaskMutableLiveData.setValue(getDefaultTaskEntities());
         ListTaskViewState result = LiveDataTestUtils.getValueForTesting(listTaskViewModel.getTaskListMutableLiveData());
 
         assertEquals(View.GONE, result.getEmptyListMessageVisibility());
@@ -111,20 +111,27 @@ public class ListTaskViewModelTest {
     }
 
     @NonNull
-    private List<TaskEntity> getDefaultTaskEntities() {
-        List<TaskEntity> taskEntities= new ArrayList<>();
-
-        for (int i = 0; i < 3; i++) {
-            taskEntities.add(
+    private List<ProjectWithTasksEntity> getDefaultTaskEntities() {
+        List<ProjectWithTasksEntity> projectWithTasksEntities= new ArrayList<>();
+        ProjectEntity projectEntity = new ProjectEntity(0,
+                EXPECTED_PROJECT_NAME,
+                EXPECTED_CHARCOAL_COLOR);
+        List<TaskEntity> taskEntities = new ArrayList<>();
+        taskEntities.add(
                 new TaskEntity(
-                    i,
-                    i,
-                    "name" + i,
-                    clock.millis()
+                        1,
+                        0,
+                        "name0",
+                        clock.millis()
                 )
+        );
+
+            projectWithTasksEntities.add(
+                    projectEntity,
+                    taskEntities
             );
-        }
-        return taskEntities;
+
+        return projectWithTasksEntities;
     }
     // region OUT
 

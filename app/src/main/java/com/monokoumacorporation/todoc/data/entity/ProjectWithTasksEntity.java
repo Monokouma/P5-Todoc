@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class ProjectWithTasks {
+public class ProjectWithTasksEntity {
 
     @Embedded
     private final ProjectEntity project;
@@ -21,7 +21,7 @@ public class ProjectWithTasks {
     )
     private final List<TaskEntity> taskEntities;
 
-    public ProjectWithTasks(ProjectEntity project, List<TaskEntity> taskEntities) {
+    public ProjectWithTasksEntity(ProjectEntity project, List<TaskEntity> taskEntities) {
         this.project = project;
         this.taskEntities = taskEntities;
     }
@@ -38,7 +38,7 @@ public class ProjectWithTasks {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProjectWithTasks that = (ProjectWithTasks) o;
+        ProjectWithTasksEntity that = (ProjectWithTasksEntity) o;
         return Objects.equals(project, that.project) && Objects.equals(taskEntities, that.taskEntities);
     }
 

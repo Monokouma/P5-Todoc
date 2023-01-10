@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.monokoumacorporation.todoc.data.entity.ProjectEntity;
-import com.monokoumacorporation.todoc.data.entity.ProjectWithTasks;
 
 import java.util.List;
 
@@ -20,6 +19,5 @@ public interface ProjectDao {
     LiveData<List<ProjectEntity>> getAll();
 
     @Query("SELECT * FROM project_table")
-    LiveData<List<ProjectWithTasks>> getAllProjectWithTasks();
-
+    List<ProjectEntity> getAllSync();
 }

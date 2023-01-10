@@ -35,11 +35,16 @@ public class ListTaskActivity extends AppCompatActivity implements OnDeleteListe
         listTaskViewModel = new ViewModelProvider(this).get(ListTaskViewModel.class);
         Toolbar toolbar = findViewById(R.id.list_task_act_toolbar);
         setSupportActionBar(toolbar);
-        RecyclerView taskRV = findViewById(R.id.list_task_act_no_task_recycler_view);
+
+        RecyclerView taskRV = findViewById(R.id.list_task_act_recycler_view);
         FloatingActionButton floatingActionButton = findViewById(R.id.list_task_act_fab);
+        FloatingActionButton deleteAllFab = findViewById(R.id.list_task_act_delete_all_fab);
         ConstraintLayout noTaskMessageLayout = findViewById(R.id.list_task_act_no_task_layout);
         ImageView noTaskImage = findViewById(R.id.list_task_act_no_task_image);
+
         floatingActionButton.setOnClickListener(view -> startActivity(CreateTaskActivity.navigate(this)));
+        deleteAllFab.setOnClickListener(view -> listTaskViewModel.deleteAll());
+
         Glide.with(this).load(R.drawable.empty_list_gif).into(noTaskImage);
         taskRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         final TaskListAdapter taskListAdapter = new TaskListAdapter(this);

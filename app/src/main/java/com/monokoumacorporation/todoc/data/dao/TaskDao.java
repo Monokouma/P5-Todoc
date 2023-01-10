@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.monokoumacorporation.todoc.data.entity.ProjectWithTasksEntity;
 import com.monokoumacorporation.todoc.data.entity.TaskEntity;
 
 import java.util.List;
@@ -21,4 +22,10 @@ public interface TaskDao {
 
     @Query("DELETE FROM task_table WHERE id=:taskId")
     void delete(long taskId);
+
+    @Query("DELETE FROM task_table")
+    void nukeTable();
+
+    @Query("SELECT * FROM project_table")
+    LiveData<List<ProjectWithTasksEntity>> getAllProjectWithTasks();
 }
