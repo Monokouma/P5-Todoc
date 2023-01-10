@@ -52,6 +52,7 @@ public class TaskDaoTest {
     public void setUp() {
         Mockito.doReturn(EXPECTED_TARTAMPION_COLOR).when(resources).getColor(R.color.dogwood_rose);
         Mockito.doReturn(EXPECTED_TARTAMPION_NAME).when(resources).getString(R.string.projet_tartampion);
+
     }
 
     @Before
@@ -62,6 +63,8 @@ public class TaskDaoTest {
                 .build();
         taskDao = todocDatabase.getTaskDao();
         projectDao = todocDatabase.getProjectDao();
+        projectDao.insert(new ProjectEntity(EXPECTED_TARTAMPION_NAME, EXPECTED_TARTAMPION_COLOR));
+
     }
 
     @After
@@ -71,43 +74,23 @@ public class TaskDaoTest {
 
     @Test
     public void insertOneTask() {
-        TaskEntity task = new TaskEntity(0, "foo", clock.millis());
-        taskDao.insertTask(task);
+        taskDao.insertTask(new TaskEntity(1, "foo", clock.millis()));
 
         List<ProjectWithTasksEntity> results = LiveDataTestUtils.getValueForTesting(taskDao.getAllProjectWithTasks());
         System.out.println(results.toString());
-
-
-    }
-
-    @Test
-    public void insertTwoTask() {
-        TaskEntity taskOne = new TaskEntity(0, "foo", clock.millis());
-        TaskEntity taskTwo = new TaskEntity(1, "bar", clock.millis());
-        taskDao.insertTask(taskOne);
-        taskDao.insertTask(taskTwo);
-
-        List<ProjectWithTasksEntity> results = LiveDataTestUtils.getValueForTesting(taskDao.getAllProjectWithTasks());
 
         assertEquals(
                 Collections.singletonList(
                         new ProjectWithTasksEntity(
                                 new ProjectEntity(
-                                        0,
+                                        1,
                                         resources.getString(R.string.projet_tartampion),
                                         R.color.dogwood_rose
                                 ),
                                 Arrays.asList(
                                         new TaskEntity(
                                                 1,
-                                                0,
                                                 "foo",
-                                                clock.millis()
-                                        ),
-                                        new TaskEntity(
-                                                2,
-                                                1,
-                                                "bar",
                                                 clock.millis()
                                         )
                                 )
@@ -115,5 +98,18 @@ public class TaskDaoTest {
                 ),
                 results
         );
+
+    }
+
+    @Test
+    public void insertTwoTask() {
+        TaskEntity taskOne = new TaskEntity(1, "foo", clock.millis());
+        TaskEntity taskTwo = new TaskEntity(2, "bar", clock.millis());
+        taskDao.insertTask(taskOne);
+        taskDao.insertTask(taskTwo);
+
+        List<ProjectWithTasksEntity> results = LiveDataTestUtils.getValueForTesting(taskDao.getAllProjectWithTasks());
+
+        System.out.println(results.toString());
     }
 }
