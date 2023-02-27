@@ -35,4 +35,11 @@ jobs:
       env:
         VERSION_CODE: ${{ github.run_number }}
       run: ./gradlew jTR
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        path: /home/runner/work/P5-Todoc/P5-Todoc/app/build/reports/jacoco/jacocoTestReport/html
+
+
+      
     
