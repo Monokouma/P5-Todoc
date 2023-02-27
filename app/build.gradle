@@ -80,12 +80,15 @@ def openReport(htmlOutDir) {
 
     final reportPath = "$htmlOutDir"
     println(reportPath)
+    /*
     def os = org.gradle.internal.os.OperatingSystem.current()
     if (os.isWindows()) {
         exec { commandLine 'cmd', '/c', "start $reportPath" }
     } else if (os.isMacOsX()) {
         exec { commandLine 'open', "$reportPath/index.html" }
     }
+
+     */
 
 }
 
@@ -106,7 +109,7 @@ tasks.withType(Test) {
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     doLast {
-        openReport layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
+        openReport layout.buildDirectory.dir("reports/jacoco/jacocoTestReport/jacocoTestReport.csv").get().asFile
     }
 
     reports {
