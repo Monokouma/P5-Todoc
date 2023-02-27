@@ -79,7 +79,7 @@ dependencies {
 def openReport(htmlOutDir) {
 
     final reportPath = "$htmlOutDir"
-
+    println(reportPath)
     def os = org.gradle.internal.os.OperatingSystem.current()
     if (os.isWindows()) {
         exec { commandLine 'cmd', '/c', "start $reportPath" }
