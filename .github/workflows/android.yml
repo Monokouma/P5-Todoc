@@ -41,3 +41,6 @@ jobs:
         path: /home/runner/work/P5-Todoc/P5-Todoc/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv
     - name: jacoco-badge-generator
       uses: cicirello/jacoco-badge-generator@v2.8.1
+      with:
+        generate-branches-badge: true
+        jacoco-csv-file: /home/runner/work/P5-Todoc/P5-Todoc/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv
