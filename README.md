@@ -1,5 +1,5 @@
 <p align=center> 
-  <img src="https://user.oc-static.com/upload/2019/04/05/1554449944338_icon-left-font%20copie%202.png">
+  <img src="https://user.oc-static.com/upload/2019/04/04/15543724442027_icon-above-font%20copie%202.png">
 </p>
 
 # Todoc - Un gestionnaire de tâches
