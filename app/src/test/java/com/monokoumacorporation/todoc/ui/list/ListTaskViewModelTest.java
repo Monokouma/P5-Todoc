@@ -88,17 +88,6 @@ public class ListTaskViewModelTest {
 
     // region IN
     @NonNull
-    private List<ProjectEntity> getDefaultProjectEntities() {
-        List<ProjectEntity> projectEntities = new ArrayList<>();
-
-        for (int i = 0; i < 3; i++) {
-            projectEntities.add(new ProjectEntity(i, "EXPECTED_PROJECT_NAME" + i, EXPECTED_CHARCOAL_COLOR));
-        }
-
-        return projectEntities;
-    }
-
-    @NonNull
     private List<ProjectWithTasksEntity> getDefaultTaskEntities() {
         List<ProjectWithTasksEntity> projectWithTasksEntities= new ArrayList<>();
 

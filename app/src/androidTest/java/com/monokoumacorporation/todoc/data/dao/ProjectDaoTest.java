@@ -119,6 +119,14 @@ public class ProjectDaoTest {
         // When
         projectDao.insert(projectEntity);
         projectDao.insert(projectEntity);
+
+        //Then
+        List<ProjectEntity> result = projectDao.getAllSync();
+        assertEquals(
+                1,
+                result.size()
+        );
+
     }
 
     @Test
